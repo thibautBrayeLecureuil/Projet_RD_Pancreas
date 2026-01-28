@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import dataTreatment as dt
 
 app = Flask(__name__)
 
@@ -12,7 +13,9 @@ def control_loop():
         print("Trop de Glucose")
     else:
         print("Pas trop de Glucose")
-    # ---------------------------------------------------------------
+
+    dt.process(data)
+
 
     return jsonify({
         "status": "success",
