@@ -1,1 +1,26 @@
-[{"date": 1769597211425, "dateString": "2026-01-28T11:46:51.000Z", "sgv": 250, "trend": 4, "device": "flask", "type": "sgv"}, {"date": 1769596911425, "dateString": "2026-01-28T11:41:51.000Z", "sgv": 250, "trend": 4, "device": "flask", "type": "sgv"}, {"date": 1769596611425, "dateString": "2026-01-28T11:36:51.000Z", "sgv": 250, "trend": 4, "device": "flask", "type": "sgv"}]
+[
+    {
+        "date": 1769597211425,
+        "dateString": "2026-01-28T11:46:51.000Z",
+        "sgv": 250,
+        "trend": 4,
+        "device": "flask",
+        "type": "sgv"
+    },
+    {
+        "date": 1769596911425,
+        "dateString": "2026-01-28T11:41:51.000Z",
+        "sgv": 250,
+        "trend": 4,
+        "device": "flask",
+        "type": "sgv"
+    },
+    {
+        "date": 1769596611425,
+        "dateString": "2026-01-28T11:36:51.000Z",
+        "sgv": 250,
+        "trend": 4,
+        "device": "flask",
+        "type": "sgv"
+    }
+]

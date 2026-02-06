@@ -1,1 +1,37 @@
-{"min_5m_carbimpact": 8, "dia": 3, "current_basal": 0.8, "basalprofile": [{"start": "00:00", "minutes": 0, "rate": 0.8}], "isfProfile": {"sensitivities": [{"i": 0, "start": "00:00", "sensitivity": 50, "offset": 0, "x": 0, "endOffset": 1440}]}, "bg_targets": {"units": "mg/dL", "user_preferred_units": "mg/dL", "targets": [{"start": "00:00", "target": 100, "high": 100, "low": 100}]}, "out_units": "mg/dL"}
+{
+    "min_5m_carbimpact": 8,
+    "dia": 3,
+    "current_basal": 0.8,
+    "basalprofile": [
+        {
+            "start": "00:00",
+            "minutes": 0,
+            "rate": 0.8
+        }
+    ],
+    "isfProfile": {
+        "sensitivities": [
+            {
+                "i": 0,
+                "start": "00:00",
+                "sensitivity": 50,
+                "offset": 0,
+                "x": 0,
+                "endOffset": 1440
+            }
+        ]
+    },
+    "bg_targets": {
+        "units": "mg/dL",
+        "user_preferred_units": "mg/dL",
+        "targets": [
+            {
+                "start": "00:00",
+                "target": 100,
+                "high": 100,
+                "low": 100
+            }
+        ]
+    },
+    "out_units": "mg/dL"
+}
