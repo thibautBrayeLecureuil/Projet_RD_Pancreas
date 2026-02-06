@@ -1,49 +1,78 @@
-import subprocess
-import datetime
 import json
+import subprocess
+import os
+from datetime import datetime, timedelta
 
-IOB_FILE = "../ressources/iob.json"
-GLUCOSE_FILE = "../ressources/glucose.json"
-PROFILE_FILE = "../ressources/profile.json"
-CLOCK_FILE = "../ressources/clock.json"
-PUMP_HISTORY_FILE = "../ressources/pumphistory.json"
-CURRENTTEMP_FILE = "../ressources/currenttemp.json"
-MEAL_FILE = "../ressources/meal.json"
+# --- 1. CONFIGURATION DES CHEMINS ---
+# Cette partie permet au code de trouver le dossier 'ressources' automatiquement
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RESSOURCES_DIR = os.path.join(BASE_DIR, '../ressources')
 
-def process(data):
+# Chemins absolus vers les fichiers JSON
+GLUCOSE_FILE = os.path.join(RESSOURCES_DIR, "glucose.json")
+IOB_FILE = os.path.join(RESSOURCES_DIR, "iob.json")
+PROFILE_FILE = os.path.join(RESSOURCES_DIR, "profile.json")
+TEMP_BASAL_FILE = os.path.join(RESSOURCES_DIR, "temp_basal.json")
 
-    date = datetime.datetime.now()
-    dateString = date.isoformat() + "Z"
+def process(data_entree):
+    # --- 2. EXTRACTION DE LA GLYCÉMIE ---
+    valeur_glucose = 150 # Valeur de sécurité par défaut
     
-    glucose_data = {
-        "date": date,
-        "dateString": dateString,
-        "sgv": data["Gb"],
-        "direction": "Flat",
-        "noise": 1
-    }
+    try:
+        # On regarde si c'est un dictionnaire direct : {"glucose": 180}
+        if isinstance(data_entree, dict) and 'glucose' in data_entree:
+            valeur_glucose = int(data_entree['glucose'])
+        # On regarde si c'est une liste : [{"glucose": 180}]
+        elif isinstance(data_entree, list) and len(data_entree) > 0:
+            if 'glucose' in data_entree[0]:
+                valeur_glucose = int(data_entree[0]['glucose'])
+        # On regarde si c'est un nombre direct
+        elif isinstance(data_entree, int) or isinstance(data_entree, float):
+             valeur_glucose = int(data_entree)
+             
+    except Exception as e:
+        print(f"[Erreur Lecture Donnée] {e}")
 
-    with open(GLUCOSE_FILE, 'r') as f:
-        glucose_file = json.loads(f)
+    print(f"[OpenAPS] Calcul pour glycémie : {valeur_glucose} mg/dL")
 
-    glucose_file.append(glucose_data)
+    # --- 3. CRÉATION DE L'HISTORIQUE (Obligatoire pour OpenAPS) ---
+    entries = []
+    now = datetime.now()
+    for i in range(3):
+        t = now - timedelta(minutes=5*i)
+        entries.append({
+            "date": int(t.timestamp() * 1000),
+            "dateString": t.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+            "sgv": valeur_glucose,
+            "trend": 4, "device": "flask", "type": "sgv"
+        })
+
+    try:
+        with open(GLUCOSE_FILE, 'w') as f:
+            json.dump(entries, f, indent=4)
+    except:
+        print("Erreur d'écriture du fichier glucose.json")
+
+    # --- 4. EXÉCUTION D'OPENAPS ---
+    # On utilise les chemins absolus définis plus haut
+    cmd = ['oref0-determine-basal', IOB_FILE, TEMP_BASAL_FILE, GLUCOSE_FILE, PROFILE_FILE]
     
-    with open(GLUCOSE_FILE, "w") as f:
-        json.dump(glucose_file, f)
-
-
-    #appel de oref0
-    output = callLoop()
-
-    return output
-
-def callLoop():
-    pwd = subprocess.run(['pwd'])
-    if not pwd.contains(b'Interface/ressources'):
-        output = subprocess.run(['cd', '~/Interface/ressources/'])
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True).stdout
         
-    output = subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
-    output = subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
-    output = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE, MEAL_FILE])
-    
-    return output 
+        # --- 5. LECTURE DU RÉSULTAT ---
+        dose = 0
+        if result:
+            for line in result.split('\n'):
+                if 'rate' in line:
+                    try:
+                        d = json.loads(line)
+                        if 'rate' in d:
+                            dose = d['rate']
+                            break
+                    except: continue
+        return dose
+        
+    except Exception as e:
+        print(f"Erreur System OpenAPS: {e}")
+        return 0
