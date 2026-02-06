@@ -9,7 +9,7 @@ def control_loop():
     data = request.json
     
     print("Received data:", data)
-    dataresponse = dt.process(data['patient'][0])
+    dataresponse = dt.process(data['patients'][0])
 
     return jsonify(dataresponse)
 
