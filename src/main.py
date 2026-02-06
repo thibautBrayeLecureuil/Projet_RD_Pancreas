@@ -7,8 +7,9 @@ app = Flask(__name__)
 def control_loop():
 
     data = request.json
-
-    dataresponse = dt.process(data[0])
+    
+    print("Received data:", data)
+    dataresponse = dt.process(data['data'])
 
     return jsonify(dataresponse)
 
