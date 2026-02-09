@@ -42,6 +42,6 @@ def callLoop():
         
     output = subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
     output = subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
-    output = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE, MEAL_FILE])
+    output = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
     
     return output
