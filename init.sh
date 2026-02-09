@@ -3,4 +3,5 @@ wget https://github.com/thibautBrayeLecureuil/Projet_RD_Pancreas/archive/refs/he
 unzip main
 mv Projet_RD_Pancreas-main/ Interface/
 rm main.zip
-python3 /home/pa/Interface/src/main.py
+cd Interface/src
+python3 main.py
