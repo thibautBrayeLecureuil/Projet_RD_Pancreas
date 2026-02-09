@@ -1,6 +1,7 @@
 import subprocess
 import datetime
 import json
+import os
 
 IOB_FILE = "../ressources/iob.json"
 GLUCOSE_FILE = "../ressources/glucose.json"
