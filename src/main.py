@@ -3,6 +3,8 @@ import dataTreatment as dt
 
 app = Flask(__name__)
 
+RESPONSE = "../ressources/response.json"
+
 @app.route('/control', methods=['POST'])
 def control_loop():
 
