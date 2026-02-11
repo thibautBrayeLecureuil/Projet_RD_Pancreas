@@ -5,7 +5,7 @@ import os
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
-PATH_RESSOURCES = PATH + "/ressources"
+PATH_RESSOURCES = "../ressources"
 
 print("Path to ressources:", PATH_RESSOURCES)
 
