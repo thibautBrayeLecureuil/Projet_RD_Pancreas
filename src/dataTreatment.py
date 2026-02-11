@@ -7,8 +7,6 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
 PATH_RESSOURCES = "../ressources"
 
-print("Path to ressources:", PATH_RESSOURCES)
-
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
@@ -43,4 +41,3 @@ def callLoop():
     subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
     subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
     subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
-    print("IOB calculation done")
