@@ -1,7 +1,6 @@
 import subprocess
 import datetime
 import json
-import os
 
 IOB_FILE = "../ressources/iob.json"
 GLUCOSE_FILE = "../ressources/glucose.json"
@@ -28,12 +27,10 @@ def process(data):
         glucose_file = json.loads(f.read())
 
     glucose_file.append(glucose_data)
-    
+
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
 
-
 def callLoop():
-
-    output = subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
-    output = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
+    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
+    subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
