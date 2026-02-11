@@ -3,9 +3,11 @@ import datetime
 import json
 import os
 
-tmp_path = os.path.dirname(os.path.abspath(__file__))
-PATH = tmp_path[:tmp_path.rfind("/src")]
+PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+
 PATH_RESSOURCES = PATH + "/ressources"
+
+print("Path to ressources:", PATH_RESSOURCES)
 
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"

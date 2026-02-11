@@ -14,4 +14,4 @@ def control_loop():
     return jsonify(dataresponse)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8082)
+    app.run(host='0.0.0.0', port=8081)
