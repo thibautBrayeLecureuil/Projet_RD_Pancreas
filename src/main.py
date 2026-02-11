@@ -3,8 +3,6 @@ import dataTreatment as dt
 
 app = Flask(__name__)
 
-RESPONSE = "../ressources/response.json"
-
 @app.route('/control', methods=['POST'])
 def control_loop():
 
@@ -16,4 +14,4 @@ def control_loop():
     return jsonify(dataresponse)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=8082)

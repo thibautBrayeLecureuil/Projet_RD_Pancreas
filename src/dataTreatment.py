@@ -3,14 +3,17 @@ import datetime
 import json
 import os
 
-IOB_FILE = "../ressources/iob.json"
-GLUCOSE_FILE = "../ressources/glucose.json"
-PROFILE_FILE = "../ressources/profile.json"
-CLOCK_FILE = "../ressources/clock.json"
-PUMP_HISTORY_FILE = "../ressources/pumphistory.json"
-CURRENTTEMP_FILE = "../ressources/currenttemp.json"
-MEAL_FILE = "../ressources/meal.json"
+tmp_path = os.path.dirname(os.path.abspath(__file__))
+PATH = tmp_path[:tmp_path.rfind("/src")]
+PATH_RESSOURCES = PATH + "/ressources"
 
+IOB_FILE = PATH_RESSOURCES + "/iob.json"
+GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
+PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
+CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
+PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
+CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
+MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 
 def process(data):
 
