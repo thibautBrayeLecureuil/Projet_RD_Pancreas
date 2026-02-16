@@ -21,7 +21,7 @@ def startInterface():
 
     date = datetime.datetime.now()
     minute = date.minute
-    hour = date.hour
+    hour = date.hour-1
     day = date.day
     datas = []
 
