@@ -1,5 +1,10 @@
 from flask import Flask, request, jsonify
 import dataTreatment as dt
+import datetime
+import json
+
+PATH_RESSOURCES = "../ressources"
+GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 
 app = Flask(__name__)
 
@@ -7,10 +12,48 @@ app = Flask(__name__)
 def control_loop():
 
     data = request.json
-    
-    dataresponse = dt.process(data['patients'][0])
 
-    return jsonify(dataresponse)
+    dt.process(data['patients'][0])
+
+    return jsonify({"insuline": "aucune idée le sang et c derbanch et " })
+
+def startInterface():
+
+    date = datetime.datetime.now()
+    minute = date.minute
+    hour = date.hour
+    day = date.day
+    datas = []
+
+    for i in range(5):
+
+
+        diff = minute - 5
+        if diff < 0 :
+            minute = 60 + diff
+            hour -= 1
+            if hour < 0 :
+                hour = 23
+                day = day - 1
+        else :
+            minute = diff
+
+        date = datetime.datetime(date.year, date.month, day, hour, minute , date.second)
+        dateString = date.isoformat() + "Z"
+
+        glucose_data = {
+            "date": dateString,
+            "sgv": 122,
+            "direction": "Flat",
+            "noise": 1
+        }
+
+        datas.append(glucose_data)
+
+    with open(GLUCOSE_FILE, "w") as f:
+        json.dump(datas, f)
+
 
 if __name__ == '__main__':
+    startInterface()
     app.run(host='0.0.0.0', port=8081)

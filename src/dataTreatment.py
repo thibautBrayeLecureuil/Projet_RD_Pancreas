@@ -38,6 +38,6 @@ def process(data):
         json.dump(glucose_file, f)
 
 def callLoop():
-    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE,PROFILE_FILE ,CLOCK_FILE])
+    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE])
     subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
     subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
