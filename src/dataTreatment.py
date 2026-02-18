@@ -16,17 +16,17 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 
 def process(data):
 
-    date = datetime.datetime.now(datetime.timezone.utc)
-    date = date - datetime.timedelta(minutes=5)
-    dateString = date.isoformat() + "Z"
-    
+    with open(CLOCK_FILE, "r") as f:
+        date = json.loads(f.read())["date"]
+        
+    date = datetime.datetime.fromisoformat(date[:-1]) + datetime.timedelta(seconds=5)
+
     glucose_data = {
-        "date": dateString,
+        "date": date,
         "sgv": data,
         "direction": "Flat",
         "noise": 1
     }
-
 
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
@@ -39,9 +39,25 @@ def process(data):
     return callLoop()
 
 def callLoop():
-    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE])
-    subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
-    result = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], capture_output=True, text=True)
+    
+    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True)
+
+    subprocess.run([
+        'oref0-meal', 
+        PUMP_HISTORY_FILE, 
+        PROFILE_FILE, 
+        CLOCK_FILE, 
+        GLUCOSE_FILE, 
+        PROFILE_FILE
+    ], check=True)
+
+    result = subprocess.run(
+        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], 
+        capture_output=True, 
+        text=True,
+        check=True
+    )
+
+    print("Result:", result.stdout)
     recommendation = json.loads(result.stdout)
-    print(recommendation)
     return recommendation["reason"]

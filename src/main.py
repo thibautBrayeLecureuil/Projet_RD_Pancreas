@@ -5,6 +5,7 @@ import json
 
 PATH_RESSOURCES = "../ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
+CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 
 app = Flask(__name__)
 
@@ -12,8 +13,13 @@ app = Flask(__name__)
 def control_loop():
 
     data = request.json
-
-    response = dt.process(data['glucose'])
+    
+    with open(GLUCOSE_FILE, 'r') as f:
+        glucose_file = json.loads(f.read())
+        
+    with open(CLOCK_FILE, "w") as f:
+        json.dump({"date":  datetime.datetime.fromisoformat(glucose_file[-1]["date"]) + datetime.timedelta(minutes=5) if len(glucose_file) > 0 else datetime.datetime.now(datetime.timezone.utc).isoformat() + "Z"}, f)
+    response = dt.process(data['glycémie'])
 
     return jsonify({"insuline": response })
 
