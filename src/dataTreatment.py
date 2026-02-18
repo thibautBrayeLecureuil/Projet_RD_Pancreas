@@ -18,7 +18,7 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 def process(data):
 
     date = datetime.datetime.now()
-    dateString = date.isoformat() + "Z"
+    dateString = date.isoformat() + "Z" 
     
     glucose_data = {
         "date": dateString,

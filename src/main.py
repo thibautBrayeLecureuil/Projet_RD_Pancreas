@@ -35,6 +35,8 @@ def startInterface():
             if hour < 0 :
                 hour = 23
                 day = day - 1
+                if day < 1 :
+                    day = 31
         else :
             minute = diff
 
@@ -56,4 +58,4 @@ def startInterface():
 
 if __name__ == '__main__':
     startInterface()
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=8181)
