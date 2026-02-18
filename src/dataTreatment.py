@@ -16,7 +16,7 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 
 def process(data):
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.now(datetime.timezone.utc)
     date = date.replace(minute=date.minute-5)
     dateString = date.isoformat() + "Z"
     
