@@ -19,9 +19,9 @@ def control_loop():
 
 def startInterface():
 
-    date = datetime.datetime.now()
+    date = datetime.datetime.now(datetime.timezone.utc)
     minute = date.minute
-    hour = date.hour-1
+    hour = date.hour
     day = date.day
     datas = []
 
