@@ -22,7 +22,7 @@ def process(data):
     
     glucose_data = {
         "date": dateString,
-        "sgv": data["Gb"],
+        "sgv": data,
         "direction": "Flat",
         "noise": 1
     }
