@@ -28,26 +28,11 @@ def historique_loop():
 def createHistorique(size=5, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
-    minute = date.minute
-    hour = date.hour
-    day = date.day
     datas = []
 
     for i in range(size):
-
-        diff = minute - 5
-        if diff < 0 :
-            minute = 60 + diff
-            hour -= 1
-            if hour < 0 :
-                hour = 23
-                day = day - 1
-                if day < 1 :
-                    day = 31
-        else :
-            minute = diff
-
-        date = datetime.datetime(date.year, date.month, day, hour, minute, date.second)
+        
+        date = date - datetime.timedelta(minutes=5)
         dateString = date.isoformat() + "Z"
 
         glucose_data = {
