@@ -17,7 +17,17 @@ def control_loop():
 
     return jsonify({"insuline": "aucune idée le sang et c derbanch et " })
 
-def startInterface():
+@app.route('/historique', methods=['POST'])
+def historique_loop():
+
+    data = request.json
+
+    if "size" in data :
+        createHistotique(data["size"])
+    else :
+        createHistotique()
+
+def createHistotique(size=5):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     minute = date.minute
@@ -25,7 +35,9 @@ def startInterface():
     day = date.day
     datas = []
 
-    for i in range(5):
+    for i in range(size):
+
+        date.hour += 1
 
         diff = minute - 5
         if diff < 0 :
@@ -54,5 +66,4 @@ def startInterface():
         json.dump(datas, f)
 
 if __name__ == '__main__':
-    startInterface()
     app.run(host='0.0.0.0', port=8081)
