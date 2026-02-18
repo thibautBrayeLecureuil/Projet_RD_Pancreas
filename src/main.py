@@ -49,6 +49,7 @@ def startInterface():
         }
 
         datas.append(glucose_data)
+        datas.reverse()
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
