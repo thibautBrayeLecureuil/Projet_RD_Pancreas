@@ -15,7 +15,7 @@ def control_loop():
 
     dt.process(data['patients'][0])
 
-    return jsonify({"insuline": "aucune idée le sang et c derbanch et " })
+    return jsonify({"insuline": "aucune idée le sang et c'est débrancher la rebranche en deux deux sinon je m'énerve de malade. Tete de phasme" })
 
 @app.route('/historique', methods=['POST'])
 def historique_loop():
@@ -49,5 +49,4 @@ def createHistorique(size=8640, basal=120):
         json.dump(datas, f)
 
 if __name__ == '__main__':
-
     app.run(host='0.0.0.0', port=8081)
