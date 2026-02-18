@@ -27,6 +27,7 @@ def process(data):
         "noise": 1
     }
 
+
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
 
