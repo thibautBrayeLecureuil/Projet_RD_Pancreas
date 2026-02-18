@@ -27,7 +27,6 @@ def startInterface():
 
     for i in range(5):
 
-
         diff = minute - 5
         if diff < 0 :
             minute = 60 + diff
@@ -38,7 +37,7 @@ def startInterface():
         else :
             minute = diff
 
-        date = datetime.datetime(date.year, date.month, day, hour, minute , date.second)
+        date = datetime.datetime(date.year, date.month, day, hour, minute, date.second)
         dateString = date.isoformat() + "Z"
 
         glucose_data = {
@@ -49,11 +48,10 @@ def startInterface():
         }
 
         datas.append(glucose_data)
-        datas.reverse()
+    datas.reverse()
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
-
 
 if __name__ == '__main__':
     startInterface()
