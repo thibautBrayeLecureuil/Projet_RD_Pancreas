@@ -13,9 +13,9 @@ def control_loop():
 
     data = request.json
 
-    dt.process(data['patients'][0])
+    response = dt.process(data['patients'][0])
 
-    return jsonify({"insuline": "aucune idée le sang et c derbanch et " })
+    return jsonify({"insuline": response })
 
 @app.route('/historique', methods=['POST'])
 def historique_loop():

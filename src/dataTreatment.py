@@ -17,7 +17,7 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 def process(data):
 
     date = datetime.datetime.now(datetime.timezone.utc)
-    date = date.replace(minute=date.minute-5)
+    date = date - datetime.timedelta(minutes=5)
     dateString = date.isoformat() + "Z"
     
     glucose_data = {
@@ -32,12 +32,16 @@ def process(data):
 
     glucose_file.append(glucose_data)
 
-    callLoop()
-
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
+
+    return callLoop()
 
 def callLoop():
     subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE])
     subprocess.run(['oref0-meal', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE])
     subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
+    result = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], capture_output=True, text=True)
+    recommendation = json.loads(result.stdout)
+
+    return recommendation["rate"]
