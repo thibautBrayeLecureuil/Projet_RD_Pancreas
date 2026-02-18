@@ -33,8 +33,6 @@ def createHistorique(size=5, basal=120):
 
     for i in range(size):
 
-        date.hour += 1
-
         diff = minute - 5
         if diff < 0 :
             minute = 60 + diff
