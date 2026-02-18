@@ -43,5 +43,5 @@ def callLoop():
     subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE])
     result = subprocess.run(['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], capture_output=True, text=True)
     recommendation = json.loads(result.stdout)
-
+    print(recommendation)
     return recommendation["rate"]
