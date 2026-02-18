@@ -13,7 +13,7 @@ def control_loop():
 
     data = request.json
 
-    response = dt.process(data['patients'][0])
+    response = dt.process(data['glucose'])
 
     return jsonify({"insuline": response })
 
