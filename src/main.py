@@ -21,23 +21,23 @@ def control_loop():
 def historique_loop():
 
     data = request.json
-    createHistorique(data["size"] if "size" in data else 5, data["basal"] if "basal" in data else 120)
+    createHistorique(data["size"] if "size" in data else 8640, data["basal"] if "basal" in data else 120)
 
     return jsonify({"response": "Done" })
 
-def createHistorique(size=5, basal=120):
+def createHistorique(size=8640, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
 
     for i in range(size):
-        
+            
         date = date - datetime.timedelta(minutes=5)
         dateString = date.isoformat() + "Z"
 
         glucose_data = {
             "date": dateString,
-            "sgv": 122,
+            "sgv": basal,
             "direction": "Flat",
             "noise": 1
         }
