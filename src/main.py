@@ -21,13 +21,9 @@ def control_loop():
 def historique_loop():
 
     data = request.json
+    createHistorique(data["size"] if "size" in data else 5, data["basal"] if "basal" in data else 120)
 
-    if "size" in data :
-        createHistotique(data["size"])
-    else :
-        createHistotique()
-
-def createHistotique(size=5):
+def createHistorique(size=5, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     minute = date.minute
@@ -46,6 +42,8 @@ def createHistotique(size=5):
             if hour < 0 :
                 hour = 23
                 day = day - 1
+                if day < 1 :
+                    day = 31
         else :
             minute = diff
 
@@ -66,4 +64,5 @@ def createHistotique(size=5):
         json.dump(datas, f)
 
 if __name__ == '__main__':
+
     app.run(host='0.0.0.0', port=8081)
