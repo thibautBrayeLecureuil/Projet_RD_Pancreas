@@ -23,6 +23,8 @@ def historique_loop():
     data = request.json
     createHistorique(data["size"] if "size" in data else 5, data["basal"] if "basal" in data else 120)
 
+    return jsonify({"response": "Done" })
+
 def createHistorique(size=5, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
