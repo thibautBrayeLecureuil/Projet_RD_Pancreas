@@ -58,7 +58,12 @@ def callLoop():
         text=True,
         check=True
     )
-
-    print("Result:", result.stdout)
+    
     recommendation = json.loads(result.stdout)
-    return recommendation["reason"]
+    
+    if "rate" in recommendation:
+        taux_insuline = recommendation["rate"]
+    else:
+        taux_insuline = 0.8
+    
+    return taux_insuline
