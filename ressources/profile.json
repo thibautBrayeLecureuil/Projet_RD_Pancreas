@@ -28,7 +28,7 @@
         "sensitivities": [
             {
                 "i": 0,
-                "start": "00:00",
+                "start": "00:00:00",
                 "sensitivity": 50,
                 "offset": 0,
                 "x": 0,
@@ -41,7 +41,7 @@
         "user_preferred_units": "mg/dL",
         "targets": [
             {
-                "start": "00:00",
+                "start": "00:00:00",
                 "target": 100,
                 "high": 100,
                 "low": 100
