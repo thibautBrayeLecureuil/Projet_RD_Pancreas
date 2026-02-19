@@ -13,7 +13,7 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
 MEAL_FILE = PATH_RESSOURCES + "/meal.json"
-BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
+BASAL_FILE = PATH_RESSOURCES + "/basal.json"
 
 def process(data):
 
@@ -23,7 +23,7 @@ def process(data):
     date = (datetime.datetime.fromisoformat(date[:-1]) + datetime.timedelta(seconds=5)).isoformat() + "Z"
 
     glucose_data = {
-        "date": date,
+        "dateString": date,
         "sgv": data,
         "direction": "Flat",
         "noise": 1
@@ -61,4 +61,4 @@ def callLoop():
 
     print("Result:", result.stdout)
     recommendation = json.loads(result.stdout)
-    return recommendation["rate"]
+    return recommendation["reason"]
