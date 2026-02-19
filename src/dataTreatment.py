@@ -19,7 +19,7 @@ def process(data):
     with open(CLOCK_FILE, "r") as f:
         date = json.loads(f.read())
         
-    date = (datetime.datetime.fromisoformat(date[:-7]+"Z") + datetime.timedelta(seconds=5)).isoformat() + "Z"
+    date = (datetime.datetime.fromisoformat(date[:-1]) + datetime.timedelta(seconds=5)).isoformat()[:-7] + "Z"
 
     glucose_data = {
         "date": date,
