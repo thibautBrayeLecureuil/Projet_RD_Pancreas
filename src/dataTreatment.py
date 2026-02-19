@@ -13,7 +13,7 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
 MEAL_FILE = PATH_RESSOURCES + "/meal.json"
-BASAL_FILE = PATH_RESSOURCES + "/basal.json"
+BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
 def process(data):
 
