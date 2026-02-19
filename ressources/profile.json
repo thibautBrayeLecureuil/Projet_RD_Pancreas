@@ -1,24 +1,25 @@
 {
     "carb_ratios": {
         "schedule": [
-        {
-            "x": 0,
-            "i": 0,
-            "offset": 0,
-            "ratio": 10,
-            "r": 10,
-            "start": "00:00:00"
-        }
-    ],
-    "units": "grams"
-  },
-  "carb_ratio": 10,
+            {
+                "x": 0,
+                "i": 0,
+                "offset": 0,
+                "ratio": 10,
+                "r": 10,
+                "start": "00:00:00"
+            }
+        ],
+        "units": "grams"
+    },
+    "carb_ratio": 10,
     "min_5m_carbimpact": 8,
     "dia": 3,
     "current_basal": 0.8,
     "basalprofile": [
         {
-            "start": "00:00",
+            "i": 0,
+            "start": "00:00:00",
             "minutes": 0,
             "rate": 0.8
         }
