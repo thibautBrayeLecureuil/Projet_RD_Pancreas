@@ -61,4 +61,4 @@ def callLoop():
 
     print("Result:", result.stdout)
     recommendation = json.loads(result.stdout)
-    return recommendation["reason"]
+    return recommendation["rate"]
