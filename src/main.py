@@ -2,8 +2,11 @@ from flask import Flask, request, jsonify
 import dataTreatment as dt
 import datetime
 import json
+import os
 
-PATH_RESSOURCES = "../ressources"
+PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+
+PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 
