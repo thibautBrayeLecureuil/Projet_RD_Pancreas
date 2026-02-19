@@ -5,7 +5,7 @@ import os
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
-PATH_RESSOURCES = "../ressources"
+PATH_RESSOURCES = "/home/pa/Interface/ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
@@ -35,7 +35,7 @@ def process(data):
 
     print(glucose_file)
     glucose_file.append(glucose_data)
-    print(glucose_file)
+    print(glucose_file)     
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
