@@ -19,7 +19,7 @@ def control_loop():
         
     with open(CLOCK_FILE, "w") as f:
         json.dump(
-            ((datetime.datetime.fromisoformat(glucose_file[-1]["date"][:-1]) + datetime.timedelta(minutes=5)).isoformat() if len(glucose_file) > 0 else datetime.datetime.now(datetime.timezone.utc).isoformat())[:-7] + "Z", f)
+            ((datetime.datetime.fromisoformat(glucose_file[-1]["date"][:-1]) + datetime.timedelta(minutes=5)).isoformat().replace("+00:00", "") if len(glucose_file) > 0 else datetime.datetime.now(datetime.timezone.utc).isoformat())[:-6] + "Z", f)
         
     response = dt.process(data['glycemie'])
 
