@@ -43,7 +43,7 @@ def process(data):
 
 def callLoop():
     
-    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True)
+    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True, capture_output=True)
 
     subprocess.run([
         'oref0-meal', 
@@ -62,6 +62,7 @@ def callLoop():
     )
     
     recommendation = json.loads(result.stdout)
+    print(recommendation)
     
     if "rate" in recommendation:
         taux_insuline = recommendation["rate"]
