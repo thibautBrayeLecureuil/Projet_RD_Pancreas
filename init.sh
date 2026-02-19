@@ -4,4 +4,4 @@ unzip main
 mv Projet_RD_Pancreas-main/ Interface/
 rm main.zip
 cd Interface
-python3 main.py
+python3 ./src/main.py
