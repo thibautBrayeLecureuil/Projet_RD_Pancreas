@@ -23,7 +23,7 @@ def process(data):
     date = (datetime.datetime.fromisoformat(date[:-1]) + datetime.timedelta(seconds=5)).isoformat() + "Z"
 
     glucose_data = {
-        "dateString": date,
+        "date": date,
         "sgv": data,
         "direction": "Flat",
         "noise": 1
