@@ -4,7 +4,7 @@ import json
 import os
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
-
+print(PATH)
 PATH_RESSOURCES = PATH + "/ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
