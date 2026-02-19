@@ -16,7 +16,6 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
 def process(data):
-
     with open(CLOCK_FILE, "r") as f:
         date = json.loads(f.read())
         
@@ -40,7 +39,18 @@ def process(data):
     return callLoop()
 
 def callLoop():
+    # --- AJOUT CRUCIAL 1 : On crée le fichier basalprofile.json à partir de profile.json ---
+    with open(PROFILE_FILE, "r") as f:
+        profile_data = json.load(f)
     
+    # On isole le tableau contenant les basals
+    basal_array = profile_data.get("basalprofile", [{"i": 0, "start": "00:00:00", "minutes": 0, "rate": 0.8}])
+    
+    # On l'écrit dans le fichier BASAL_FILE pour que oref0-meal le lise sans erreur
+    with open(BASAL_FILE, "w") as f:
+        json.dump(basal_array, f)
+    # -----------------------------------------------------------------------------------
+
     subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True)
 
     subprocess.run([
@@ -61,4 +71,20 @@ def callLoop():
 
     print("Result:", result.stdout)
     recommendation = json.loads(result.stdout)
-    return recommendation["reason"]
+    
+    # --- AJOUT CRUCIAL 2 : On renvoie l'insuline, pas juste la phrase ! ---
+    # Si oref0 demande un changement, il donne un "rate". Sinon, on garde le basal normal.
+    if "rate" in recommendation:
+        taux_insuline = recommendation["rate"]
+    else:
+        taux_insuline = profile_data.get("current_basal", 0.8) # 0.8 U/h par défaut
+
+    # On prépare un dictionnaire propre pour MATLAB
+    reponse_matlab = {
+        "reason": recommendation.get("reason", "Aucune raison fournie"),
+        "rate": taux_insuline,
+        "duration": recommendation.get("duration", 30) # Par défaut, un temp basal dure 30 min
+    }
+    
+    return reponse_matlab
+    # ----------------------------------------------------------------------
