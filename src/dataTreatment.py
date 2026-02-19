@@ -5,7 +5,7 @@ import os
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
-PATH_RESSOURCES = "/ressources"
+PATH_RESSOURCES = "./ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
