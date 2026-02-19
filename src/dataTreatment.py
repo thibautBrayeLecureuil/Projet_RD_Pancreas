@@ -33,7 +33,9 @@ def process(data):
         glucose_file = json.loads(f.read())
         f.close()
 
+    print(glucose_file)
     glucose_file.append(glucose_data)
+    print(glucose_file)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
