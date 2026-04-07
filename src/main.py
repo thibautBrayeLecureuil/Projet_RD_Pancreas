@@ -19,21 +19,10 @@ def control_loop():
     
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
-
-    if len(glucose_file) > 0:
-        latest_glucose = max(
-            glucose_file,
-            key=lambda entry: datetime.datetime.fromisoformat(entry["date"].replace("Z", "+00:00"))
-        )
-        next_clock = (
-            datetime.datetime.fromisoformat(latest_glucose["date"].replace("Z", "+00:00"))
-            + datetime.timedelta(minutes=5)
-        )
-    else:
-        next_clock = datetime.datetime.now(datetime.timezone.utc)
         
     with open(CLOCK_FILE, "w") as f:
-        json.dump(next_clock.isoformat().replace("+00:00", "") + "Z", f)
+        json.dump(
+            ((datetime.datetime.fromisoformat(glucose_file[-1]["date"][:-1]) + datetime.timedelta(minutes=5)).isoformat() if len(glucose_file) > 0 else datetime.datetime.now(datetime.timezone.utc).isoformat()).replace("+00:00", "") + "Z", f)
         
     response = dt.process(data['glycemie'])
 
@@ -65,8 +54,6 @@ def createHistorique(size=8640, basal=120):
         }
 
         datas.append(glucose_data)
-
-    datas.reverse()
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
