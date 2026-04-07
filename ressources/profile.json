@@ -13,6 +13,7 @@
         "units": "grams"
     },
     "carb_ratio": 10,
+    "maxCOB": 120,
     "min_5m_carbimpact": 8,
     "dia": 3,
     "current_basal": 0.8,

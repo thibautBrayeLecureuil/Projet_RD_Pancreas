@@ -44,7 +44,7 @@ def createHistorique(size=8640, basal=120):
     for i in range(size):
             
         date = date - datetime.timedelta(minutes=5)
-        dateString = date.isoformat() + "Z"
+        dateString = date.isoformat().replace("+00:00", "") + "Z"
 
         glucose_data = {
             "date": dateString,
