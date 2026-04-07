@@ -3,6 +3,7 @@ import dataTreatment as dt
 import datetime
 import json
 import os
+import random
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
@@ -45,10 +46,12 @@ def createHistorique(size=8640, basal=120):
             
         date = date - datetime.timedelta(minutes=5)
         dateString = date.isoformat().replace("+00:00", "") + "Z"
+        
+        variation = random.randint(-20, 20)
 
         glucose_data = {
             "date": dateString,
-            "sgv": basal,
+            "sgv": basal + variation,
             "direction": "Flat",
             "noise": 1
         }
