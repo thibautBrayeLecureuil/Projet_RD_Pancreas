@@ -22,6 +22,7 @@
     "max_basal": 3.0,
     "min_bg": 100,
     "max_bg": 100,
+    "sens": 50,
     "basalprofile": [
         {
             "i": 0,
