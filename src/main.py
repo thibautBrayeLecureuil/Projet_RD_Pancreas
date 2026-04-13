@@ -72,6 +72,8 @@ def createHistorique(size=8640, basal=120):
         glucose_data = {
             "date": int(date.timestamp() * 1000),
             "dateString": date_string,
+            "display_time": date_string,
+            "glucose": basal + variation,
             "sgv": basal + variation,
             "direction": "Flat",
             "noise": 1,
