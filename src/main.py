@@ -5,7 +5,7 @@ import json
 import os
 import random
 
-PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"

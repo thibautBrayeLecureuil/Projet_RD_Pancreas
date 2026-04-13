@@ -3,9 +3,9 @@ import datetime
 import json
 import os
 
-PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-PATH_RESSOURCES = "./ressources"
+PATH_RESSOURCES = PATH + "/ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
