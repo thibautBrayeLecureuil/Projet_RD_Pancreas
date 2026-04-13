@@ -56,9 +56,18 @@ def process(data):
     return callLoop()
 
 def callLoop():
-    
-    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True, capture_output=True)
+    # 1. Calcul IOB : On capture le texte ET on l'écrit dans le fichier iob.json !
+    iob_result = subprocess.run(
+        ['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], 
+        capture_output=True, 
+        text=True, # Important pour récupérer du texte et pas des bytes
+        check=True
+    )
+    # On sauvegarde le résultat dans le fichier pour l'étape suivante
+    with open(IOB_FILE, "w") as f:
+        f.write(iob_result.stdout)
 
+    # 2. Calcul Meal (Silencieux)
     subprocess.run([
         'oref0-meal', 
         PUMP_HISTORY_FILE, 
@@ -66,17 +75,25 @@ def callLoop():
         CLOCK_FILE, 
         GLUCOSE_FILE, 
         BASAL_FILE
-    ], check=True)
+    ], capture_output=True, check=True)
 
+    # 3. Décision finale
     result = subprocess.run(
         ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], 
         capture_output=True, 
-        text=True,
-        check=True
+        text=True
     )
     
+    # SÉCURITÉ : Si oref0 plante et ne renvoie rien, on affiche l'erreur et on maintient le basal
+    if not result.stdout.strip():
+        print("🚨 ERREUR OPENAPS (oref0-determine-basal a crashé) :")
+        print(result.stderr) # Ça affichera le vrai problème dans ton terminal
+        return 0.8
+        
     recommendation = json.loads(result.stdout)
-    print(recommendation)
+    
+    # On affiche la raison pour voir comment l'algorithme réfléchit
+    print("🧠 RAISON OPENAPS :", recommendation.get("reason", "Aucune explication"))
     
     if "rate" in recommendation:
         taux_insuline = recommendation["rate"]
