@@ -3,9 +3,9 @@ import datetime
 import json
 import os
 
-PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-PATH_RESSOURCES = "./ressources"
+PATH_RESSOURCES = PATH + "/ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
@@ -48,29 +48,64 @@ def process(data):
         json.dump(glucose_file, f)
         f.close()
 
-    return callLoop()
+    try:
+        return callLoop()
+    except Exception as err:
+        print(err)
+        # Keep API available even when oref0 fails on malformed inputs.
+        return 0.8
+
+
+def _run_oref0(command):
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode != 0:
+        stderr = (result.stderr or "").strip()
+        stdout = (result.stdout or "").strip()
+        details = stderr if stderr else stdout
+        raise RuntimeError(f"{' '.join(command)} failed: {details}")
+    return result
+
+
+def _parse_recommendation_output(result):
+    """Parse oref0-determine-basal output and tolerate empty/noisy payloads."""
+    stdout = (result.stdout or "").strip()
+    stderr = (result.stderr or "").strip()
+
+    if stdout:
+        try:
+            return json.loads(stdout)
+        except json.JSONDecodeError:
+            # Some tools print logs then JSON on the last line.
+            for line in reversed(stdout.splitlines()):
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    return json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+    print(f"oref0-determine-basal produced no parseable JSON. stdout='{stdout}' stderr='{stderr}'")
+    return {"rate": 0.8, "reason": "No valid determine-basal JSON output"}
 
 def callLoop():
-    
-    subprocess.run(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], check=True, capture_output=True)
 
-    subprocess.run([
+    _run_oref0(['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE])
+
+    _run_oref0([
         'oref0-meal', 
         PUMP_HISTORY_FILE, 
         PROFILE_FILE, 
         CLOCK_FILE, 
         GLUCOSE_FILE, 
         BASAL_FILE
-    ], check=True)
+    ])
 
-    result = subprocess.run(
+    result = _run_oref0(
         ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], 
-        capture_output=True, 
-        text=True,
-        check=True
     )
-    
-    recommendation = json.loads(result.stdout)
+
+    recommendation = _parse_recommendation_output(result)
     print(recommendation)
     
     if "rate" in recommendation:
