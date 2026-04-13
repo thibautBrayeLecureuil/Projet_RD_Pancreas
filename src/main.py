@@ -37,11 +37,7 @@ def control_loop():
         glucose_file = json.loads(f.read())
         
     with open(CLOCK_FILE, "w") as f:
-        if len(glucose_file) > 0:
-            latest_glucose_time = _parse_glucose_datetime(glucose_file[0])
-            clock_time = latest_glucose_time + datetime.timedelta(minutes=5)
-        else:
-            clock_time = datetime.datetime.now(datetime.timezone.utc)
+        clock_time = datetime.datetime.now(datetime.timezone.utc)
 
         json.dump(clock_time.isoformat().replace("+00:00", "") + "Z", f)
         
@@ -86,7 +82,7 @@ def createHistorique(size=8640, basal=120):
 def historique_matlab():
 
     data = request.json
-    createHistoriqueMatlab(data["values"] )
+    createHistoriqueMatlab(data["values"])
     return jsonify({"response": "Done" })
 
 def createHistoriqueMatlab(values):
