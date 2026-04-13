@@ -92,8 +92,7 @@ def callLoop():
         
     recommendation = json.loads(result.stdout)
     
-    # On affiche la raison pour voir comment l'algorithme réfléchit
-    print("🧠 RAISON OPENAPS :", recommendation.get("reason", "Aucune explication"))
+    print(" RAISON OPENAPS :", recommendation.get("reason", "Aucune explication"))
     
     if "rate" in recommendation:
         taux_insuline = recommendation["rate"]

@@ -81,6 +81,36 @@ def createHistorique(size=8640, basal=120):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
+        
+@app.route('/historiqueMatlab', methods=['POST'])
+def historique_matlab():
+
+    data = request.json
+    createHistoriquMatlab(data["values"] )
+    return jsonify({"response": "Done" })
+
+def createHistoriquMatlab(values):
+
+    date = datetime.datetime.now(datetime.timezone.utc)
+    datas = []
+
+    for value in values:
+            
+        date = date - datetime.timedelta(minutes=5)
+        date_string = date.isoformat().replace("+00:00", "") + "Z"
+
+        glucose_data = {
+            "date": int(date.timestamp() * 1000),
+            "dateString": date_string,
+            "sgv": value,
+            "direction": "Flat",
+            "noise": 1,
+        }
+
+        datas.append(glucose_data)
+
+    with open(GLUCOSE_FILE, "w") as f:
+        json.dump(datas, f)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
