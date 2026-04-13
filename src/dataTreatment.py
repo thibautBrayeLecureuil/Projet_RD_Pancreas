@@ -16,14 +16,21 @@ MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
 def process(data):
-
+    # 1. On lit l'horloge
     with open(CLOCK_FILE, "r") as f:
-        date = json.loads(f.read())
+        date_str = json.loads(f.read())
         
-    date = (datetime.datetime.fromisoformat(date[:-1]+"+00:00") + datetime.timedelta(seconds=5)).isoformat() + "Z"
+    # 2. On avance le temps de 5 MINUTES (et non 5 secondes)
+    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
+    
+    # 3. On prépare les DEUX formats de date exigés par OpenAPS
+    date_string = current_dt.isoformat().replace("+00:00", "") + "Z"
+    date_ms = int(current_dt.timestamp() * 1000)
 
+    # L'objet glucose est maintenant parfait pour OpenAPS
     glucose_data = {
-        "date": date,
+        "date": date_ms,            # Millisecondes pour les calculs internes
+        "dateString": date_string,  # Texte pour la lecture
         "sgv": data,
         "direction": "Flat",
         "noise": 1
@@ -31,13 +38,20 @@ def process(data):
 
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
-        f.close()
         
-    glucose_file.append(glucose_data)
+    # 4. CRUCIAL : On insère la nouvelle valeur au DEBUT de la liste (index 0)
+    # OpenAPS regarde toujours glucose.json[0] pour prendre sa décision !
+    glucose_file.insert(0, glucose_data)
+    
+    # Sécurité : On garde uniquement les 288 dernières valeurs (24h) pour ne pas faire exploser le fichier
+    glucose_file = glucose_file[:288]
    
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
-        f.close()
+
+    # 5. On sauvegarde la nouvelle horloge pour la prochaine boucle
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
 
     return callLoop()
 
