@@ -86,10 +86,10 @@ def createHistorique(size=8640, basal=120):
 def historique_matlab():
 
     data = request.json
-    createHistoriquMatlab(data["values"] )
+    createHistoriqueMatlab(data["values"] )
     return jsonify({"response": "Done" })
 
-def createHistoriquMatlab(values):
+def createHistoriqueMatlab(values):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
