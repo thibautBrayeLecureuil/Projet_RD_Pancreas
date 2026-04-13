@@ -13,6 +13,21 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 
 app = Flask(__name__)
 
+
+def _parse_glucose_datetime(entry):
+    """Return a UTC datetime from a glucose entry supporting ms epoch and ISO strings."""
+    if "date" in entry and isinstance(entry["date"], (int, float)):
+        value = float(entry["date"])
+        if value > 1e11:
+            value /= 1000.0
+        return datetime.datetime.fromtimestamp(value, tz=datetime.timezone.utc)
+
+    candidate = entry.get("dateString") or entry.get("date")
+    if isinstance(candidate, str):
+        return datetime.datetime.fromisoformat(candidate.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+
+    raise ValueError("Unable to parse glucose timestamp")
+
 @app.route('/control', methods=['POST'])
 def control_loop():
 
@@ -22,8 +37,13 @@ def control_loop():
         glucose_file = json.loads(f.read())
         
     with open(CLOCK_FILE, "w") as f:
-        json.dump(
-            ((datetime.datetime.fromisoformat(glucose_file[-1]["date"][:-1]) + datetime.timedelta(minutes=5)).isoformat() if len(glucose_file) > 0 else datetime.datetime.now(datetime.timezone.utc).isoformat()).replace("+00:00", "") + "Z", f)
+        if len(glucose_file) > 0:
+            latest_glucose_time = _parse_glucose_datetime(glucose_file[0])
+            clock_time = latest_glucose_time + datetime.timedelta(minutes=5)
+        else:
+            clock_time = datetime.datetime.now(datetime.timezone.utc)
+
+        json.dump(clock_time.isoformat().replace("+00:00", "") + "Z", f)
         
     response = dt.process(data['glycemie'])
 
@@ -45,15 +65,16 @@ def createHistorique(size=8640, basal=120):
     for i in range(size):
             
         date = date - datetime.timedelta(minutes=5)
-        dateString = date.isoformat().replace("+00:00", "") + "Z"
+        date_string = date.isoformat().replace("+00:00", "") + "Z"
         
         variation = random.randint(-20, 20)
 
         glucose_data = {
-            "date": dateString,
+            "date": int(date.timestamp() * 1000),
+            "dateString": date_string,
             "sgv": basal + variation,
             "direction": "Flat",
-            "noise": 1
+            "noise": 1,
         }
 
         datas.append(glucose_data)

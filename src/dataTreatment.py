@@ -15,25 +15,34 @@ CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
 MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
+
+def _parse_clock(raw_clock):
+    if isinstance(raw_clock, str):
+        return datetime.datetime.fromisoformat(raw_clock.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
+    return datetime.datetime.now(datetime.timezone.utc)
+
 def process(data):
 
     with open(CLOCK_FILE, "r") as f:
         date = json.loads(f.read())
         
-    date = (datetime.datetime.fromisoformat(date[:-1]+"+00:00") + datetime.timedelta(seconds=5)).isoformat() + "Z"
+    current_dt = _parse_clock(date) + datetime.timedelta(seconds=5)
+    date_string = current_dt.isoformat().replace("+00:00", "") + "Z"
 
     glucose_data = {
-        "date": date,
+        "date": int(current_dt.timestamp() * 1000),
+        "dateString": date_string,
         "sgv": data,
         "direction": "Flat",
-        "noise": 1
+        "noise": 1,
     }
 
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
         f.close()
         
-    glucose_file.append(glucose_data)
+    # oref0 expects most recent glucose entries first.
+    glucose_file.insert(0, glucose_data)
    
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
