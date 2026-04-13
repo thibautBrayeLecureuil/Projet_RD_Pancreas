@@ -86,7 +86,7 @@ def callLoop():
     
     # SÉCURITÉ : Si oref0 plante et ne renvoie rien, on affiche l'erreur et on maintient le basal
     if not result.stdout.strip():
-        print("🚨 ERREUR OPENAPS (oref0-determine-basal a crashé) :")
+        print("ERREUR OPENAPS (oref0-determine-basal a crashé) :")
         print(result.stderr) # Ça affichera le vrai problème dans ton terminal
         return 0.8
         
