@@ -80,7 +80,7 @@ def createHistoriqueMatlab(values):
             "noise": 1,
         }
 
-        datas.append(glucose_data)
+        datas.insert(0,glucose_data)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
