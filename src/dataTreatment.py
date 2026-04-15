@@ -21,7 +21,7 @@ def process(data):
         date_str = json.loads(f.read())
         
     # 2. On avance le temps de 5 MINUTES (et non 5 secondes)
-    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
+    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(seconds=10)
     
     # 3. On prépare les DEUX formats de date exigés par OpenAPS
     date_string = current_dt.isoformat().replace("+00:00", "") + "Z"

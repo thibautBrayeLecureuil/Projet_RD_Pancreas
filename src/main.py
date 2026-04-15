@@ -52,7 +52,7 @@ def createHistorique(size=8640, basal=120):
 
     for i in range(size):
             
-        date = date - datetime.timedelta(minutes=5)
+        date = date - datetime.timedelta(seconds=10)
         date_string = date.isoformat().replace("+00:00", "") + "Z"
         
         variation = random.randint(-20, 20)
@@ -84,7 +84,7 @@ def createHistoriqueMatlab(values):
 
     for value in values:
             
-        date = date - datetime.timedelta(minutes=5)
+        date = date - datetime.timedelta(seconds=10)
         date_string = date.isoformat().replace("+00:00", "") + "Z"
 
         glucose_data = {
