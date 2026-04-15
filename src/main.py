@@ -30,17 +30,9 @@ def _parse_glucose_datetime(entry):
 
 @app.route('/control', methods=['POST'])
 def control_loop():
-
     data = request.json
     
-    with open(GLUCOSE_FILE, 'r') as f:
-        glucose_file = json.loads(f.read())
-        
-    with open(CLOCK_FILE, "w") as f:
-        clock_time = datetime.datetime.now(datetime.timezone.utc)
-
-        json.dump(clock_time.isoformat().replace("+00:00", "") + "Z", f)
-        
+    # On laisse dataTreatment faire tout le travail (y compris avancer l'horloge de 5 min)
     response = dt.process(data['glycemie'])
 
     return jsonify({"insuline": response })
@@ -107,6 +99,9 @@ def createHistoriqueMatlab(values):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
+        
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(datas[0]["dateString"], f)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
