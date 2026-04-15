@@ -20,7 +20,7 @@ def process(data):
     with open(CLOCK_FILE, "r") as f:
         date_str = json.loads(f.read())
         
-    # 2. On avance le temps de 5 MINUTES (et non 5 secondes)
+    # 2. On avance le temps de 10 secondes
     current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(seconds=10)
     
     # 3. On prépare les DEUX formats de date exigés par OpenAPS
@@ -97,6 +97,6 @@ def callLoop():
     if "rate" in recommendation:
         taux_insuline = recommendation["rate"]
     else:
-        taux_insuline = 0.8
+        taux_insuline = 0
     
     return taux_insuline

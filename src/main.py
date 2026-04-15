@@ -99,9 +99,6 @@ def createHistoriqueMatlab(values):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(datas[0]["dateString"], f)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
