@@ -13,21 +13,6 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 
 app = Flask(__name__)
 
-
-def _parse_glucose_datetime(entry):
-    """Return a UTC datetime from a glucose entry supporting ms epoch and ISO strings."""
-    if "date" in entry and isinstance(entry["date"], (int, float)):
-        value = float(entry["date"])
-        if value > 1e11:
-            value /= 1000.0
-        return datetime.datetime.fromtimestamp(value, tz=datetime.timezone.utc)
-
-    candidate = entry.get("dateString") or entry.get("date")
-    if isinstance(candidate, str):
-        return datetime.datetime.fromisoformat(candidate.replace("Z", "+00:00")).astimezone(datetime.timezone.utc)
-
-    raise ValueError("Unable to parse glucose timestamp")
-
 @app.route('/control', methods=['POST'])
 def control_loop():
     data = request.json

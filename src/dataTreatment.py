@@ -41,7 +41,7 @@ def process(data):
         
     # 4. CRUCIAL : On insère la nouvelle valeur au DEBUT de la liste (index 0)
     # OpenAPS regarde toujours glucose.json[0] pour prendre sa décision !
-    glucose_file.insert(0, glucose_data)
+    glucose_file.append(glucose_data)
     
     # Sécurité : On garde uniquement les 288 dernières valeurs (24h) pour ne pas faire exploser le fichier
     glucose_file = glucose_file[:288]
