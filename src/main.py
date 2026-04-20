@@ -51,13 +51,13 @@ def createHistorique(size=8640, basal=120):
         }
 
         datas.append(glucose_data)
+        
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
 
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
         
 @app.route('/historiqueMatlab', methods=['POST'])
 def historique_matlab():
@@ -87,6 +87,9 @@ def createHistoriqueMatlab(values):
         }
 
         datas.append(glucose_data)
+        
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
 
     datas.reverse()
 
@@ -94,8 +97,6 @@ def createHistoriqueMatlab(values):
         json.dump(datas, f)
 
 
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)

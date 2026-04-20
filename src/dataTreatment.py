@@ -36,6 +36,9 @@ def process(data):
         "noise": 1
     }
 
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
+
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
         
@@ -45,8 +48,7 @@ def process(data):
         json.dump(glucose_file, f)
 
     # 5. On sauvegarde la nouvelle horloge pour la prochaine boucle
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
+
 
     return callLoop()
 
