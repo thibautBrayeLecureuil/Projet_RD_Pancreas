@@ -131,5 +131,13 @@ def callLoop():
     # On écrase le fichier avec le nouvel historique
     with open(PUMP_HISTORY_FILE, "w") as f:
         json.dump(pump_history, f, indent=4)
-    
+        
+    current_temp = {
+        "duration": 30,
+        "rate": taux_insuline,
+        "temp": "absolute"
+    }
+    with open(CURRENTTEMP_FILE, "w") as f:
+        json.dump(current_temp, f, indent=4)
+            
     return taux_insuline
