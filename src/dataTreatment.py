@@ -108,15 +108,22 @@ def callLoop():
         # Si le fichier n'existe pas ou est mal formaté, on part de zéro
         pump_history = []
         
-    # On crée la trace de l'injection
-    new_event = {
+    event_rate = {
         "_type": "TempBasal",
+        "temp": "absolute",
         "rate": taux_insuline,
         "timestamp": current_time_str
     }
     
-    # On l'insère au début
-    pump_history.insert(0, new_event)
+    event_duration = {
+        "_type": "TempBasalDuration",
+        "duration (min)": 30, # OpenAPS met toujours des basals de 30 minutes par défaut
+        "timestamp": current_time_str
+    }
+    
+    # On les insère au début (en index 0).
+    pump_history.insert(0, event_rate)
+    pump_history.insert(0, event_duration)
     
     # On garde juste les 50 derniers pour ne pas faire bugger la Raspberry
     pump_history = pump_history[:50]
