@@ -71,6 +71,8 @@ def createHistoriqueMatlab(values):
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
 
+    values.reverse()
+
     for value in values:
             
         date = date - datetime.timedelta(seconds=10)
