@@ -95,5 +95,34 @@ def callLoop():
         taux_insuline = recommendation["rate"]
     else:
         taux_insuline = 0
+        
+    try:
+        # On lit l'heure virtuelle
+        with open(CLOCK_FILE, "r") as f:
+            current_time_str = json.loads(f.read())
+            
+        # On lit l'ancien historique
+        with open(PUMP_HISTORY_FILE, "r") as f:
+            pump_history = json.loads(f.read())
+    except Exception:
+        # Si le fichier n'existe pas ou est mal formaté, on part de zéro
+        pump_history = []
+        
+    # On crée la trace de l'injection
+    new_event = {
+        "_type": "TempBasal",
+        "rate": taux_insuline,
+        "timestamp": current_time_str
+    }
+    
+    # On l'insère au début
+    pump_history.insert(0, new_event)
+    
+    # On garde juste les 50 derniers pour ne pas faire bugger la Raspberry
+    pump_history = pump_history[:50]
+    
+    # On écrase le fichier avec le nouvel historique
+    with open(PUMP_HISTORY_FILE, "w") as f:
+        json.dump(pump_history, f, indent=4)
     
     return taux_insuline
