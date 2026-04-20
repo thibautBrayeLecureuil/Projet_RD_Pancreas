@@ -76,7 +76,7 @@ def callLoop():
 
     # 3. Décision finale
     result = subprocess.run(
-        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE], 
+        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE, '--clock', CLOCK_FILE], 
         capture_output=True, 
         text=True
     )
