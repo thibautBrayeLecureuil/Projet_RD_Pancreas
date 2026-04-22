@@ -11,6 +11,8 @@ PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 
+last_recomended_rate = 0
+
 app = Flask(__name__)
 
 @app.route('/control', methods=['POST'])
