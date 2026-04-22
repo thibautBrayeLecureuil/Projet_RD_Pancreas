@@ -120,9 +120,6 @@ def callLoop():
     pump_history.insert(0, event_rate)
     pump_history.insert(0, event_duration)
     
-    # On garde juste les 50 derniers pour ne pas faire bugger la Raspberry
-    pump_history = pump_history[:50]
-    
     # On écrase le fichier avec le nouvel historique
     with open(PUMP_HISTORY_FILE, "w") as f:
         json.dump(pump_history, f, indent=4)
