@@ -55,7 +55,6 @@ def callLoop():
     with open(IOB_FILE, "w") as f:
         f.write(iob_result.stdout)
 
-
     subprocess.run([
         'oref0-meal', 
         PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE, BASAL_FILE
@@ -63,6 +62,8 @@ def callLoop():
 
     with open(CLOCK_FILE, "r") as f:
         current_time_str = json.loads(f.read())
+
+    updatePumpHistory(current_time_str)
 
     result = subprocess.run(
         ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, 
@@ -84,3 +85,27 @@ def callLoop():
         taux_insuline = 0
         
     return taux_insuline
+
+def updatePumpHistory(date):
+    with open(PUMP_HISTORY_FILE, 'r') as f:
+        pump_history = json.loads(f.read())
+
+    with open(MEAL_FILE, 'r') as f:
+        meal_data = json.loads(f.read())
+
+    if meal_data:
+        event_rate =  {
+            "timestamp": date,
+            "carbs": meal_data.get("carbs"),
+        }
+
+    else:
+        event_rate =  {
+            "timestamp": date,
+            "carbs": 0,
+        }
+
+    pump_history.append(event_rate)
+    
+    with open(PUMP_HISTORY_FILE, 'w') as f:
+        json.dump(pump_history, f)
