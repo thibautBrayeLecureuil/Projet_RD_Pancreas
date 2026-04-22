@@ -67,7 +67,7 @@ def callLoop():
 
     result = subprocess.run(
         ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, 
-         PROFILE_FILE, '--clock', current_time_str],
+         PROFILE_FILE, '--currentTime', current_time_str],
         capture_output=True, text=True
     )
     
