@@ -53,33 +53,38 @@ def process(data):
     return callLoop()
 
 def callLoop():
-    # 1. Calcul IOB
+    # 1. Calcul IOB : On capture le texte ET on l'écrit dans le fichier iob.json !
     iob_result = subprocess.run(
         ['oref0-calculate-iob', PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE], 
-        capture_output=True, text=True, check=True
+        capture_output=True, 
+        text=True, # Important pour récupérer du texte et pas des bytes
+        check=True
     )
+    # On sauvegarde le résultat dans le fichier pour l'étape suivante
     with open(IOB_FILE, "w") as f:
         f.write(iob_result.stdout)
 
-    # 2. Calcul Meal
+    # 2. Calcul Meal (Silencieux)
     subprocess.run([
         'oref0-meal', 
-        PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE, BASAL_FILE
+        PUMP_HISTORY_FILE, 
+        PROFILE_FILE, 
+        CLOCK_FILE, 
+        GLUCOSE_FILE, 
+        BASAL_FILE
     ], capture_output=True, check=True)
 
-    # ✅ On lit le contenu du fichier clock pour le passer en valeur
-    with open(CLOCK_FILE, "r") as f:
-        current_time_str = json.loads(f.read())
-
-    # 3. Décision finale — on passe --currentTime avec la valeur ISO
+    # 3. Décision finale
     result = subprocess.run(
-        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, 
-         PROFILE_FILE, '--currentTime', current_time_str],
-        capture_output=True, text=True
+        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, PROFILE_FILE, '--clock', CLOCK_FILE], 
+        capture_output=True, 
+        text=True
     )
     
+    # SÉCURITÉ : Si oref0 plante et ne renvoie rien, on affiche l'erreur et on maintient le basal
     if not result.stdout.strip():
-        print("ERREUR OPENAPS :", result.stderr)
+        print("ERREUR OPENAPS (oref0-determine-basal a crashé) :")
+        print(result.stderr) # Ça affichera le vrai problème dans ton terminal
         return 0.8
         
     recommendation = json.loads(result.stdout)
