@@ -83,44 +83,4 @@ def callLoop():
     else:
         taux_insuline = 0
         
-    try:
-
-        with open(CLOCK_FILE, "r") as f:
-            current_time_str = json.loads(f.read())
-            
-        with open(PUMP_HISTORY_FILE, "r") as f:
-            pump_history = json.loads(f.read())
-    except Exception:
-
-        pump_history = []
-        
-    event_rate = {
-        "_type": "TempBasal",
-        "temp": "absolute",
-        "rate": taux_insuline,
-        "timestamp": current_time_str
-    }
-    
-    event_duration = {
-        "_type": "TempBasalDuration",
-        "duration (min)": 30,
-        "timestamp": current_time_str
-    }
-    
-    pump_history.insert(0, event_rate)
-    pump_history.insert(0, event_duration)
-    
-
-    with open(PUMP_HISTORY_FILE, "w") as f:
-        json.dump(pump_history, f, indent=4)
-        
-    current_temp = {
-        "duration": 30,
-        "rate": taux_insuline,
-        "temp": "absolute"
-    }
-    
-    with open(CURRENTTEMP_FILE, "w") as f:
-        json.dump(current_temp, f, indent=4)
-            
     return taux_insuline

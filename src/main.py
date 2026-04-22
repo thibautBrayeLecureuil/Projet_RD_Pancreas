@@ -10,6 +10,7 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
+PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 
 last_recomended_rate = 0
 
@@ -19,7 +20,6 @@ app = Flask(__name__)
 def control_loop():
     data = request.json
     
-    # On laisse dataTreatment faire tout le travail (y compris avancer l'horloge de 5 min)
     response = dt.process(data['glycemie'])
 
     return jsonify({"insuline": response })
@@ -68,10 +68,27 @@ def historique_matlab():
     createHistoriqueMatlab(data["values"])
     return jsonify({"response": "Done" })
 
+
+def pump_history(date):
+
+    pump_history = []
+        
+    event_rate =  {
+        "timestamp": date.isoformat().replace("+00:00", "") + "Z",
+        "carbs": 40
+    }
+    
+    pump_history.append(event_rate)
+    
+    with open(PUMP_HISTORY_FILE, "w") as f:
+        json.dump(pump_history, f, indent=4)
+
 def createHistoriqueMatlab(values):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
+
+    pump_history(date)
 
     values.reverse()
 
@@ -97,7 +114,6 @@ def createHistoriqueMatlab(values):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
-
 
 
 if __name__ == '__main__':
