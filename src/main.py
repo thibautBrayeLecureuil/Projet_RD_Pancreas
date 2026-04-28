@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import dataTreatment as dt
 import datetime
 import json
@@ -10,6 +10,7 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
+PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
 app = Flask(__name__)
 
@@ -96,7 +97,12 @@ def createHistoriqueMatlab(values):
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
 
+@app.route('/')
+def web ():
+    with open(PROFILE_FILE) as f:
+        data = json.load(f)
 
+    return render_template(PATH + "\\web\\index.html", profile=data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
