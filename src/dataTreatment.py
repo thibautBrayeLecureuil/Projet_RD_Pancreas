@@ -22,7 +22,7 @@ def process(data):
         
     current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
     
-    date_string = current_dt.isoformat().replace("+00:00", "") + "Z"
+    date_string = current_dt.isoformat().replace("+00:00", "Z")
     date_ms = int(current_dt.timestamp() * 1000)
 
     glucose_data = {
