@@ -82,7 +82,7 @@ def callLoop():
     if "rate" in recommendation:
         taux_insuline = recommendation["rate"]
     else:
-        taux_insuline = 0
+        taux_insuline = 0.8
         
     return taux_insuline
 

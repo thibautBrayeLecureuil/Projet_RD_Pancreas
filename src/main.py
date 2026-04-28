@@ -36,6 +36,11 @@ def createHistorique(size=8640, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
+    
+    date_string = date.isoformat().replace("+00:00", "") + "Z"
+    
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
 
     for i in range(size):
             
@@ -53,9 +58,6 @@ def createHistorique(size=8640, basal=120):
         }
 
         datas.append(glucose_data)
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
@@ -91,6 +93,12 @@ def createHistoriqueMatlab(values):
     pump_history(date)
 
     values.reverse()
+    
+    date_string = date.isoformat().replace("+00:00", "") + "Z"
+            
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
+
 
     for value in values:
             
@@ -106,10 +114,7 @@ def createHistoriqueMatlab(values):
         }
 
         datas.append(glucose_data)
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
-
+    
     datas.reverse()
 
     with open(GLUCOSE_FILE, "w") as f:
