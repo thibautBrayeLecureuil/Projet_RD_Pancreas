@@ -20,7 +20,7 @@ def process(data):
     with open(CLOCK_FILE, "r") as f:
         date_str = json.loads(f.read())
         
-    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(seconds=10)
+    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
     
     date_string = current_dt.isoformat().replace("+00:00", "") + "Z"
     date_ms = int(current_dt.timestamp() * 1000)
