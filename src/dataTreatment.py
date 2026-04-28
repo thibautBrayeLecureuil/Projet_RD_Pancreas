@@ -55,13 +55,11 @@ def callLoop():
     with open(IOB_FILE, "w") as f:
         f.write(iob_result.stdout)
 
-    meal = subprocess.run([
+    subprocess.run([
         'oref0-meal', 
         PUMP_HISTORY_FILE, PROFILE_FILE, CLOCK_FILE, GLUCOSE_FILE, BASAL_FILE
     ], capture_output=True, check=True)
     
-    print("MEAL :", meal.stdout)
-
     with open(CLOCK_FILE, "r") as f:
         current_time_str = json.loads(f.read())
 
