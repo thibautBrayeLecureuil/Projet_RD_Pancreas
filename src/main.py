@@ -35,8 +35,8 @@ def createHistorique(size=8640, basal=120):
         json.dump(date_string, f)
 
     for i in range(size):
-        # CRUCIAL : minutes=5 pour simuler correctement l'historique
-        date = date - datetime.timedelta(minutes=5)
+
+        date = date - datetime.timedelta(seconds=10)
         date_string = date.isoformat().replace("+00:00", "Z")
         variation = random.randint(-20, 20)
         glucose_data = {
@@ -46,7 +46,7 @@ def createHistorique(size=8640, basal=120):
             "direction": "Flat",
             "noise": 1,
         }
-        datas.append(glucose_data)
+        datas.insert(0, glucose_data)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
@@ -88,8 +88,6 @@ def createHistoriqueMatlab(values):
             "noise": 1,
         }
         datas.append(glucose_data)
-    
-    datas.reverse()
     
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)

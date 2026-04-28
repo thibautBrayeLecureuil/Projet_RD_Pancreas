@@ -39,7 +39,7 @@ def process(data):
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
         
-    glucose_file.append(glucose_data)
+    glucose_file.insert(0, glucose_data)
    
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
@@ -105,7 +105,7 @@ def updatePumpHistory(date):
             "carbs": 0,
         }
 
-    pump_history.append(event_rate)
+    pump_history.insert(0, event_rate)
     
     with open(PUMP_HISTORY_FILE, 'w') as f:
         json.dump(pump_history, f)
