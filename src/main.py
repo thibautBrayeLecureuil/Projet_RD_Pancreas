@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import dataTreatment as dt
 import datetime
 import json
@@ -11,8 +11,7 @@ PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
-
-last_recomended_rate = 0
+PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
 app = Flask(__name__)
 
@@ -41,6 +40,7 @@ def createHistorique(size=8640, basal=120):
     
     with open(CLOCK_FILE, "w") as f:
         json.dump(date_string, f)
+        f.close()
 
     for i in range(size):
             
@@ -61,6 +61,7 @@ def createHistorique(size=8640, basal=120):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
+        f.close()
 
         
 @app.route('/historiqueMatlab', methods=['POST'])
@@ -84,6 +85,7 @@ def pump_history(date):
     
     with open(PUMP_HISTORY_FILE, "w") as f:
         json.dump(pump_history, f, indent=4)
+        f.close()
 
 def createHistoriqueMatlab(values):
 
@@ -98,7 +100,7 @@ def createHistoriqueMatlab(values):
             
     with open(CLOCK_FILE, "w") as f:
         json.dump(date_string, f)
-
+        f.close()
 
     for value in values:
             
@@ -119,7 +121,15 @@ def createHistoriqueMatlab(values):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
+        f.close()
 
+@app.route('/')
+def web ():
+    with open(PROFILE_FILE) as f:
+        data = json.load(f)
+        f.close()
+
+    return render_template(PATH + "\\web\\index.html", profile=data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)

@@ -7,18 +7,19 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
 PATH_RESSOURCES = "./ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
+MEAL_FILE = PATH_RESSOURCES + "/meal.json"
+CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
-CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
-PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
-CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
-MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
+CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
+PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 
 def process(data):
 
     with open(CLOCK_FILE, "r") as f:
         date_str = json.loads(f.read())
+        f.close()
         
     current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
     
@@ -35,14 +36,17 @@ def process(data):
 
     with open(CLOCK_FILE, "w") as f:
         json.dump(date_string, f)
+        f.close()
 
     with open(GLUCOSE_FILE, 'r') as f:
         glucose_file = json.loads(f.read())
+        f.close()
         
     glucose_file.append(glucose_data)
    
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(glucose_file, f)
+        f.close()
 
     return callLoop()
 
@@ -54,6 +58,7 @@ def callLoop():
     )
     with open(IOB_FILE, "w") as f:
         f.write(iob_result.stdout)
+        f.close()
 
     subprocess.run([
         'oref0-meal', 
@@ -62,6 +67,7 @@ def callLoop():
 
     with open(CLOCK_FILE, "r") as f:
         current_time_str = json.loads(f.read())
+        f.close()
 
     updatePumpHistory(current_time_str)
 
@@ -89,9 +95,11 @@ def callLoop():
 def updatePumpHistory(date):
     with open(PUMP_HISTORY_FILE, 'r') as f:
         pump_history = json.loads(f.read())
+        f.close()
 
     with open(MEAL_FILE, 'r') as f:
         meal_data = json.loads(f.read())
+        f.close()
 
     if meal_data:
         event_rate =  {
@@ -109,3 +117,4 @@ def updatePumpHistory(date):
     
     with open(PUMP_HISTORY_FILE, 'w') as f:
         json.dump(pump_history, f)
+        f.close()
