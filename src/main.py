@@ -10,6 +10,9 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
+PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
+
+last_recomended_rate = 0
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
 app = Flask(__name__)
@@ -18,7 +21,6 @@ app = Flask(__name__)
 def control_loop():
     data = request.json
     
-    # On laisse dataTreatment faire tout le travail (y compris avancer l'horloge de 5 min)
     response = dt.process(data['glycemie'])
 
     return jsonify({"insuline": response })
@@ -35,6 +37,11 @@ def createHistorique(size=8640, basal=120):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
+    
+    date_string = date.isoformat().replace("+00:00", "") + "Z"
+    
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
 
     for i in range(size):
             
@@ -52,9 +59,6 @@ def createHistorique(size=8640, basal=120):
         }
 
         datas.append(glucose_data)
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
@@ -67,12 +71,35 @@ def historique_matlab():
     createHistoriqueMatlab(data["values"])
     return jsonify({"response": "Done" })
 
+
+def pump_history(date):
+
+    pump_history = []
+        
+    event_rate =  {
+        "timestamp": date.isoformat().replace("+00:00", "") + "Z",
+        "carbs": 40
+    }
+    
+    pump_history.append(event_rate)
+    
+    with open(PUMP_HISTORY_FILE, "w") as f:
+        json.dump(pump_history, f, indent=4)
+
 def createHistoriqueMatlab(values):
 
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
 
+    pump_history(date)
+
     values.reverse()
+    
+    date_string = date.isoformat().replace("+00:00", "") + "Z"
+            
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
+
 
     for value in values:
             
@@ -88,10 +115,7 @@ def createHistoriqueMatlab(values):
         }
 
         datas.append(glucose_data)
-        
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
-
+    
     datas.reverse()
 
     with open(GLUCOSE_FILE, "w") as f:
