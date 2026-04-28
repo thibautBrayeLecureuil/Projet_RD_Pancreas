@@ -7,13 +7,13 @@ PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 
 PATH_RESSOURCES = "./ressources"
 IOB_FILE = PATH_RESSOURCES + "/iob.json"
+MEAL_FILE = PATH_RESSOURCES + "/meal.json"
+CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
-CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
-PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
-CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
-MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
+CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
+PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 
 def process(data):
 
