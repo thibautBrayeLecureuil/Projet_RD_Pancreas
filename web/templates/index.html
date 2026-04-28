@@ -1,0 +1,213 @@
+<html>
+<head>
+    <title>oref0 Profile</title>
+</head>
+<body>
+
+<form id="profileForm">
+
+    <h2>General</h2>
+
+    <p>Carb ratio</p>
+    <input name="carb_ratio" value="{{ profile.carb_ratio }}">
+
+    <p>Max COB</p>
+    <input name="max_cob" value="{{ profile.maxCOB }}">
+
+    <p>DIA (hours)</p>
+    <input name="dia" value="{{ profile.dia }}">
+
+    <p>Current basal (U/hr)</p>
+    <input name="current_basal" value="{{ profile.current_basal }}">
+
+    <p>Sensitivity (ISF)</p>
+    <input name="sens" value="{{ profile.sens }}">
+
+    <hr>
+
+    <h2>Carb Ratios</h2>
+    {% for cr in profile.carb_ratios.schedule %}
+        <div>
+            <p>Index</p>
+            <input name="cr_i" value="{{ cr.i }}">
+
+            <p>Start time</p>
+            <input name="cr_start" value="{{ cr.start }}">
+
+            <p>Offset (min)</p>
+            <input name="cr_offset" value="{{ cr.offset }}">
+
+            <p>Ratio (g/U)</p>
+            <input name="cr_ratio" value="{{ cr.ratio }}">
+
+            <p>R (g/U)</p>
+            <input name="cr_r" value="{{ cr.r }}">
+
+            <p>X (min)</p>
+            <input name="cr_x" value="{{ cr.x }}">
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h2>Basal Profile</h2>
+    {% for b in profile.basalprofile %}
+        <div>
+            <p>Index</p>
+            <input name="basal_i" value="{{ b.i }}">
+
+            <p>Start time</p>
+            <input name="basal_start" value="{{ b.start }}">
+
+            <p>Minutes</p>
+            <input name="basal_minutes" value="{{ b.minutes }}">
+
+            <p>Rate (U/hr)</p>
+            <input name="basal_rate" value="{{ b.rate }}">
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h2>ISF Profile</h2>
+    {% for s in profile.isfProfile.sensitivities %}
+        <div>
+            <p>Index</p>
+            <input name="isf_i" value="{{ s.i }}">
+
+            <p>Start time</p>
+            <input name="isf_start" value="{{ s.start }}">
+
+            <p>Sensitivity (mg/dL/U)</p>
+            <input name="sensitivity" value="{{ s.sensitivity }}">
+
+            <p>Offset (min)</p>
+            <input name="isf_offset" value="{{ s.offset }}">
+
+            <p>X (min)</p>
+            <input name="isf_x" value="{{ s.x }}">
+
+            <p>End Offset (min)</p>
+            <input name="endOffset" value="{{ s.endOffset }}">
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h2>BG Targets</h2>
+    {% for t in profile.bg_targets.targets %}
+        <div>
+            <p>Start time</p>
+            <input name="target_start" value="{{ t.start }}">
+
+            <p>Target BG</p>
+            <input name="target" value="{{ t.target }}">
+
+            <p>High BG</p>
+            <input name="high" value="{{ t.high }}">
+
+            <p>Low BG</p>
+            <input name="low" value="{{ t.low }}">
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <p>Output units</p>
+    <input name="out_units" value="{{ profile.out_units }}">
+
+    <br><br>
+    <button type="submit">Save</button>
+
+</form>
+
+</body>
+<script>
+document.getElementById("profileForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const get = (name) => document.querySelector(`[name="${name}"]`)?.value;
+
+    const toNumber = (v) => v !== undefined && v !== "" ? Number(v) : undefined; 
+
+    const data = {
+        carb_ratios: {
+            schedule: [
+                {
+                    x: toNumber(get("cr_x")),
+                    i: toNumber(get("cr_i")),
+                    offset: toNumber(get("cr_offset")),
+                    ratio: toNumber(get("cr_ratio")),
+                    r: toNumber(get("cr_r")),
+                    start: get("cr_start")
+                }
+            ],
+            units: get("units")
+        },
+
+        carb_ratio: toNumber(get("carb_ratio")),
+        maxCOB: toNumber(get("max_cob")),
+        min_5m_carbimpact: toNumber(get("min_5m_carbimpact")),
+        dia: toNumber(get("dia")),
+        current_basal: toNumber(get("current_basal")),
+        max_iob: toNumber(get("max_iob")),
+        max_daily_basal: toNumber(get("max_daily_basal")),
+        max_basal: toNumber(get("max_basal")),
+        min_bg: toNumber(get("min_bg")),
+        max_bg: toNumber(get("max_bg")),
+        sens: toNumber(get("sens")),
+
+        basalprofile: [
+            {
+                i: toNumber(get("basal_i")),
+                start: get("basal_start"),
+                minutes: toNumber(get("basal_minutes")),
+                rate: toNumber(get("basal_rate"))
+            }
+        ],
+
+        isfProfile: {
+            sensitivities: [
+                {
+                    i: toNumber(get("isf_i")),
+                    start: get("isf_start"),
+                    sensitivity: toNumber(get("sensitivity")),
+                    offset: toNumber(get("isf_offset")),
+                    x: toNumber(get("isf_x")),
+                    endOffset: toNumber(get("endOffset"))
+                }
+            ]
+        },
+
+        bg_targets: {
+            units: "mg/dL",
+            user_preferred_units: "mg/dL",
+            targets: [
+                {
+                    start: get("target_start"),
+                    target: toNumber(get("target")),
+                    high: toNumber(get("high")),
+                    low: toNumber(get("low"))
+                }
+            ]
+        },
+
+        out_units: get("out_units")
+    };
+
+    console.log("Sending JSON:", data);
+
+    const response = await fetch("/updateprofile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    console.log("Response:", result);
+});
+</script>
+</html>
+

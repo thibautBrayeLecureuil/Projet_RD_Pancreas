@@ -12,7 +12,7 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=PATH + "\\web\\templates", static_folder=PATH + "\\web\\static")
 
 @app.route('/control', methods=['POST'])
 def control_loop():
@@ -98,7 +98,19 @@ def createHistoriqueMatlab(values):
 def web():
     with open(PROFILE_FILE) as f:
         data = json.load(f)
-    return render_template(PATH + "\\web\\index.html", profile=data)
+        f.close()
+
+    return render_template("index.html", profile=data)
+
+@app.route('/updateprofile', methods=['POST'])
+def update_profile():
+    data = request.json
+
+    with open(PROFILE_FILE, "w") as f:
+        json.dump(data, f)
+        f.close()
+
+    return jsonify({"response": "Profile updated" })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
