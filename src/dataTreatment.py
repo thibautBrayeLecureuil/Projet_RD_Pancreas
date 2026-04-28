@@ -58,7 +58,6 @@ def callLoop():
     )
     with open(IOB_FILE, "w") as f:
         f.write(iob_result.stdout)
-        f.close()
 
     subprocess.run([
         'oref0-meal', 
@@ -67,16 +66,31 @@ def callLoop():
 
     with open(CLOCK_FILE, "r") as f:
         current_time_str = json.loads(f.read())
-        f.close()
 
     updatePumpHistory(current_time_str)
+    
+    with open(PATH_RESSOURCES + "/autosens.json", "w") as f:
+        json.dump({"ratio": 1.0}, f)
+    with open(PATH_RESSOURCES + "/dummy.json", "w") as f:
+        json.dump({}, f)
 
     result = subprocess.run(
-        ['oref0-determine-basal', IOB_FILE, CURRENTTEMP_FILE, GLUCOSE_FILE, 
-         PROFILE_FILE, '--currentTime', current_time_str],
+        [
+            'oref0-determine-basal', 
+            IOB_FILE, 
+            CURRENTTEMP_FILE, 
+            GLUCOSE_FILE, 
+            PROFILE_FILE, 
+            PATH_RESSOURCES + "/autosens.json",
+            MEAL_FILE,                          
+            PATH_RESSOURCES + "/dummy.json",  
+            PATH_RESSOURCES + "/dummy.json",    
+            CLOCK_FILE                        
+        ], 
         capture_output=True, text=True
     )
-    
+
+
     if not result.stdout.strip():
         print("ERREUR OPENAPS :", result.stderr)
         return 0.8
