@@ -12,7 +12,7 @@ CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
-app = Flask(__name__, template_folder=PATH + "\\web\\templates", static_folder=PATH + "\\web\\static")
+app = Flask(__name__, template_folder=PATH + "/web/templates", static_folder=PATH + "/web/static")
 
 @app.route('/control', methods=['POST'])
 def control_loop():
