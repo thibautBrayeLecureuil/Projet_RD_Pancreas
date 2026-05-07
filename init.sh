@@ -2,10 +2,10 @@ echo "====================================="
 echo " --- Recupération du projet PAOA --- "
 echo "====================================="
 
-rm -rf Interface
+rm -rf PAOA_Interface_T1DMS_Oref
 wget https://github.com/thibautBrayeLecureuil/Projet_RD_Pancreas/archive/refs/heads/main.zip
 unzip main
-mv Projet_RD_Pancreas-main/ Interface/
+mv Projet_RD_Pancreas-main/ PAOA_Interface_T1DMS_Oref/
 rm main.zip
 
 echo "====================================="
@@ -32,5 +32,5 @@ echo "====================================="
 echo " ---- Lancement de l'interface ---- "
 echo "====================================="
 
-cd Interface
+cd PAOA_Interface_T1DMS_Oref
 python3 ./src/main.py

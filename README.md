@@ -1,4 +1,4 @@
-# Projet_RD_Pancreas
+# PAOA (Pancréas artificiel openAPS)
 
 ## Présentation
 Ce projet à pour but de mettre en place une interface entre le simulateur de patient T1DMS et l'algorithme Oref0.
@@ -12,6 +12,8 @@ Le code présent dans ce dépôt concerne uniquement l'interface développée en
 En executant la commande suivante, le projet va être téléchargé puis dézippé. L'interface se lancera directement sur le port 8081.
 
 ```curl -L -O https://raw.githubusercontent.com/thibautBrayeLecureuil/Projet_RD_Pancreas/main/init.sh && chmod +x init.sh && ./init.sh```
+
+L'installation de la bibliothèque python Flask est faite par le script init.sh. Néanmoins, il est possible que d'autres bibliothèques utilisées par le projet ne soient pas installées sur votre poste. Vous devrez, dans le cas échéant, les installer manuellement.
 
 > [!IMPORTANT]
 > Si le port est déjà utilisé, l'interface ne pourra pas se lancer. Pour corriger cela, il vous faudra modifier la variable "PORT" dans le fichier "/src/main.py"
@@ -33,3 +35,11 @@ Le dossier "web" contient le code html permettant d'afficher les données des fi
 
 Dans l'état actuel des choses ce dernier ne contient que la page de configuration du profile patient.
 
+## Lancement de l'interface
+
+Pour lancer l'interface vous pouver exécuter la commande d'installation. Le script init.sh prend en charge la supression de l'ancien répertoire.
+
+Vous pouvez aussi executer le fichier main.y avec la commande ```python3 [PATH]/main.py```
+
+> [!IMPORTANT]
+> remplacez "PATH" par votre chemin d'accès.
