@@ -3,14 +3,18 @@ import dataTreatment as dt
 import json
 import os
 
-PORT=8081
-
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
 CLOCK_FILE = PATH_RESSOURCES + "/clock.json"
 PUMP_HISTORY_FILE = PATH_RESSOURCES + "/pumphistory.json"
 PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
+
+with open(os.path.join(PATH, "config.json")) as f:
+    config = json.load(f)
+    f.close()
+
+PORT = config.get("port", 8081)
 
 app = Flask(__name__, template_folder=PATH + "/web/templates", static_folder=PATH + "/web/static")
 
