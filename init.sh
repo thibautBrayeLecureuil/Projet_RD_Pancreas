@@ -26,10 +26,6 @@ then
     exit 1
 fi
 
-sudo apt update
-
-pip install --upgrade pip
-
 pip install flask
 
 echo "====================================="
