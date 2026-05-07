@@ -1,5 +1,7 @@
+from flask import jsonify
 import subprocess
 import datetime
+import random
 import json
 import os
 
@@ -120,3 +122,76 @@ def updatePumpHistory(date):
     
     with open(PUMP_HISTORY_FILE, 'w') as f:
         json.dump(pump_history, f)
+
+'''
+Historique bidon basé sur une valeur de Matlab
+'''
+def createHistorique(size=8640, basal=120):
+    date = datetime.datetime.now(datetime.timezone.utc)
+    datas = []
+    
+    date_string = date.isoformat().replace("+00:00", "Z")
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
+
+    for i in range(size):
+
+        date = date - datetime.timedelta(seconds=10)
+        date_string = date.isoformat().replace("+00:00", "Z")
+        variation = random.randint(-20, 20)
+        glucose_data = {
+            "date": int(date.timestamp() * 1000),
+            "dateString": date_string,
+            "sgv": basal + variation,
+            "direction": "Flat",
+            "noise": 1,
+        }
+        datas.insert(0, glucose_data)
+
+    with open(GLUCOSE_FILE, "w") as f:
+        json.dump(datas, f)
+
+'''
+Historique basé sur des valeurs envoyées par Matlab
+'''
+def createHistoriqueMatlab(values):
+    date = datetime.datetime.now(datetime.timezone.utc)
+    datas = []
+    pump_history(date)
+    values.reverse()
+    
+    date_string = date.isoformat().replace("+00:00", "Z")
+    with open(CLOCK_FILE, "w") as f:
+        json.dump(date_string, f)
+
+    for value in values:
+        date = date - datetime.timedelta(seconds=10)
+        date_string = date.isoformat().replace("+00:00", "Z")
+        glucose_data = {
+            "date": int(date.timestamp() * 1000),
+            "dateString": date_string,
+            "sgv": float(value),
+            "direction": "Flat",
+            "noise": 1,
+        }
+        datas.append(glucose_data)
+    
+    with open(GLUCOSE_FILE, "w") as f:
+        json.dump(datas, f)
+
+    return jsonify({"response": "Profile updated" })
+
+'''
+Faux historique de la pompe pour tester la partie calcul de l'insuline
+Probablement à modifier pour être plus réaliste
+'''
+def pump_history(date):
+    pump_history_data = []
+    event_rate =  {
+        "timestamp": date.isoformat().replace("+00:00", "Z"),
+        "carbs": 40
+    }
+    pump_history_data.append(event_rate)
+
+    with open(PUMP_HISTORY_FILE, "w") as f:
+        json.dump(pump_history_data, f, indent=4)

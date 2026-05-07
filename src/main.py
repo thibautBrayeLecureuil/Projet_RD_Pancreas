@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import dataTreatment as dt
-import datetime
 import json
 import os
-import random
+
 
 PORT=8081
 
@@ -31,7 +30,7 @@ def control_loop():
 @app.route('/historique', methods=['POST'])
 def historique_loop():
     data = request.json
-    createHistorique(data.get("size", 8640), data.get("basal", 120))
+    dt.createHistorique(data.get("size", 8640), data.get("basal", 120))
     return jsonify({"response": "Done" })
 
 '''
@@ -62,81 +61,8 @@ Route pour recevoir un historique de glycémie depuis Matlab et le stocker
 @app.route('/historiqueMatlab', methods=['POST'])
 def historique_matlab():
     data = request.json
-    createHistoriqueMatlab(data["values"])
+    dt.createHistoriqueMatlab(data["values"])
     return jsonify({"response": "Done" })
  
-'''
-Historique bidon basé sur une valeur de Matlab
-'''
-def createHistorique(size=8640, basal=120):
-    date = datetime.datetime.now(datetime.timezone.utc)
-    datas = []
-    
-    date_string = date.isoformat().replace("+00:00", "Z")
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
-
-    for i in range(size):
-
-        date = date - datetime.timedelta(seconds=10)
-        date_string = date.isoformat().replace("+00:00", "Z")
-        variation = random.randint(-20, 20)
-        glucose_data = {
-            "date": int(date.timestamp() * 1000),
-            "dateString": date_string,
-            "sgv": basal + variation,
-            "direction": "Flat",
-            "noise": 1,
-        }
-        datas.insert(0, glucose_data)
-
-    with open(GLUCOSE_FILE, "w") as f:
-        json.dump(datas, f)
-
-'''
-Historique basé sur des valeurs envoyées par Matlab
-'''
-def createHistoriqueMatlab(values):
-    date = datetime.datetime.now(datetime.timezone.utc)
-    datas = []
-    pump_history(date)
-    values.reverse()
-    
-    date_string = date.isoformat().replace("+00:00", "Z")
-    with open(CLOCK_FILE, "w") as f:
-        json.dump(date_string, f)
-
-    for value in values:
-        date = date - datetime.timedelta(seconds=10)
-        date_string = date.isoformat().replace("+00:00", "Z")
-        glucose_data = {
-            "date": int(date.timestamp() * 1000),
-            "dateString": date_string,
-            "sgv": float(value),
-            "direction": "Flat",
-            "noise": 1,
-        }
-        datas.append(glucose_data)
-    
-    with open(GLUCOSE_FILE, "w") as f:
-        json.dump(datas, f)
-
-    return jsonify({"response": "Profile updated" })
-
-'''
-Faux historique de la pompe pour tester la partie calcul de l'insuline
-Probablement à modifier pour être plus réaliste
-'''
-def pump_history(date):
-    pump_history_data = []
-    event_rate =  {
-        "timestamp": date.isoformat().replace("+00:00", "Z"),
-        "carbs": 40
-    }
-    pump_history_data.append(event_rate)
-
-    with open(PUMP_HISTORY_FILE, "w") as f:
-        json.dump(pump_history_data, f, indent=4)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT)
