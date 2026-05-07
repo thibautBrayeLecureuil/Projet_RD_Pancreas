@@ -17,6 +17,12 @@ CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
 MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
+with open(os.path.join(PATH, "config.json")) as f:
+    config = json.load(f)
+    f.close()
+
+TIMEDELTAMIN = config.get("time_delta_minute", 5)
+
 '''
 Fonction pour traiter les données de glycémie, mettre à jour les fichiers nécessaires et appeler Oref0 pour obtenir une recommandation d'insuline
 '''
@@ -25,7 +31,7 @@ def process(data):
     with open(CLOCK_FILE, "r") as f:
         date_str = json.loads(f.read())
         
-    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=5)
+    current_dt = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00")) + datetime.timedelta(minutes=TIMEDELTAMIN)
     
     date_string = current_dt.isoformat().replace("+00:00", "Z")
     date_ms = int(current_dt.timestamp() * 1000)
@@ -136,7 +142,7 @@ def createHistorique(size=8640, basal=120):
 
     for i in range(size):
 
-        date = date - datetime.timedelta(seconds=10)
+        date = date - datetime.timedelta(minutes=TIMEDELTAMIN)
         date_string = date.isoformat().replace("+00:00", "Z")
         variation = random.randint(-20, 20)
         glucose_data = {
@@ -165,7 +171,7 @@ def createHistoriqueMatlab(values):
         json.dump(date_string, f)
 
     for value in values:
-        date = date - datetime.timedelta(seconds=10)
+        date = date - datetime.timedelta(minutes=TIMEDELTAMIN)
         date_string = date.isoformat().replace("+00:00", "Z")
         glucose_data = {
             "date": int(date.timestamp() * 1000),

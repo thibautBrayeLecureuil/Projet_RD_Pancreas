@@ -3,7 +3,6 @@ import dataTreatment as dt
 import json
 import os
 
-
 PORT=8081
 
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
