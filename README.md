@@ -13,6 +13,8 @@ En executant la commande suivante, le projet va être téléchargé puis dézipp
 
 ```curl -L -O https://raw.githubusercontent.com/thibautBrayeLecureuil/Projet_RD_Pancreas/main/init.sh && chmod +x init.sh && ./init.sh```
 
+L'installation de la bibliothèque python Flask est faite par le script init.sh. Néanmoins, il est possible que d'autres bibliothèques utilisées par le projet ne soient pas installées sur votre poste. Vous devrez, dans le cas échéant, les installer manuellement.
+
 > [!IMPORTANT]
 > Si le port est déjà utilisé, l'interface ne pourra pas se lancer. Pour corriger cela, il vous faudra modifier la variable "PORT" dans le fichier "/src/main.py"
 
