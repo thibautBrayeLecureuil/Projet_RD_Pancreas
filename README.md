@@ -18,7 +18,7 @@ En executant la commande suivante, le projet va être téléchargé puis dézipp
 
 ## Architecture
 
-###Ressources
+### Ressources
 Dans le dossier "ressources", vous trouverez tous les fichiers nécessaire à la configuration et au bon fonctionnement d'Oref0.
 
 ### SRC
