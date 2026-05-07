@@ -1,6 +1,6 @@
 # Projet_RD_Pancreas
 
-## Préésentation
+## Présentation
 Ce projet à pour but de mettre en place une interface entre le simulateur de patient T1DMS et l'algorithme Oref0.
 Le code présent dans ce dépôt concerne uniquement l'interface développée en python.
 
