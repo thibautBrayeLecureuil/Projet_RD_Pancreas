@@ -26,6 +26,28 @@ def historique_loop():
     createHistorique(data.get("size", 8640), data.get("basal", 120))
     return jsonify({"response": "Done" })
 
+@app.route('/')
+def web():
+    with open(PROFILE_FILE) as f:
+        data = json.load(f)
+        f.close()
+
+    return render_template("index.html", profile=data)
+
+@app.route('/updateprofile', methods=['POST'])
+def update_profile():
+    data = request.json
+
+    with open(PROFILE_FILE, "w") as f:
+        json.dump(data, f)
+        f.close()
+
+@app.route('/historiqueMatlab', methods=['POST'])
+def historique_matlab():
+    data = request.json
+    createHistoriqueMatlab(data["values"])
+    return jsonify({"response": "Done" })
+ 
 def createHistorique(size=8640, basal=120):
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
@@ -50,22 +72,6 @@ def createHistorique(size=8640, basal=120):
 
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
-
-@app.route('/historiqueMatlab', methods=['POST'])
-def historique_matlab():
-    data = request.json
-    createHistoriqueMatlab(data["values"])
-    return jsonify({"response": "Done" })
-
-def pump_history(date):
-    pump_history_data = []
-    event_rate =  {
-        "timestamp": date.isoformat().replace("+00:00", "Z"),
-        "carbs": 40
-    }
-    pump_history_data.append(event_rate)
-    with open(PUMP_HISTORY_FILE, "w") as f:
-        json.dump(pump_history_data, f, indent=4)
 
 def createHistoriqueMatlab(values):
     date = datetime.datetime.now(datetime.timezone.utc)
@@ -92,23 +98,17 @@ def createHistoriqueMatlab(values):
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
 
-@app.route('/')
-def web():
-    with open(PROFILE_FILE) as f:
-        data = json.load(f)
-        f.close()
-
-    return render_template("index.html", profile=data)
-
-@app.route('/updateprofile', methods=['POST'])
-def update_profile():
-    data = request.json
-
-    with open(PROFILE_FILE, "w") as f:
-        json.dump(data, f)
-        f.close()
-
     return jsonify({"response": "Profile updated" })
+
+def pump_history(date):
+    pump_history_data = []
+    event_rate =  {
+        "timestamp": date.isoformat().replace("+00:00", "Z"),
+        "carbs": 40
+    }
+    pump_history_data.append(event_rate)
+    with open(PUMP_HISTORY_FILE, "w") as f:
+        json.dump(pump_history_data, f, indent=4)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081)
