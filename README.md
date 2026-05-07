@@ -18,4 +18,18 @@ En executant la commande suivante, le projet va être téléchargé puis dézipp
 
 ## Architecture
 
+###Ressources
 Dans le dossier "ressources", vous trouverez tous les fichiers nécessaire à la configuration et au bon fonctionnement d'Oref0.
+
+### SRC
+Vous trouverez dans "src" le code de l'interface. 
+
+Le fichier "main.py" contient les différentes routes de l'API et fait apppel à dataTreatment.
+
+Le fichier "dataTreatment.py" permet de traiter et mettre en forme les données. C'est aussi dans ce dernier que l'appel à l'algorithme Ore0 est fait.
+
+### Web
+Le dossier "web" contient le code html permettant d'afficher les données des fichiers JSON.
+
+Dans l'état actuel des choses ce dernier ne contient que la page de configuration du profile du patient.
+
