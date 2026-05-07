@@ -15,6 +15,9 @@ CURRENTTEMP_FILE = PATH_RESSOURCES + "/currenttemp.json"
 MEAL_FILE = PATH_RESSOURCES + "/meal.json"
 BASAL_FILE = PATH_RESSOURCES + "/basalprofile.json"
 
+'''
+Fonction pour traiter les données de glycémie, mettre à jour les fichiers nécessaires et appeler Oref0 pour obtenir une recommandation d'insuline
+'''
 def process(data):
 
     with open(CLOCK_FILE, "r") as f:
@@ -46,6 +49,10 @@ def process(data):
 
     return callLoop()
 
+
+'''
+appel d'oref0 pour obtenir une recommandation d'insuline basée sur les données actuelles de glycémie, le profil de la pompe, l'historique de la pompe et les repas
+'''
 def callLoop():
 
     iob_result = subprocess.run(
@@ -86,6 +93,10 @@ def callLoop():
         
     return taux_insuline
 
+
+'''
+Mise à jour de l'historique de la pompe avec un nouvel événement de repas ou de basal
+'''
 def updatePumpHistory(date):
     with open(PUMP_HISTORY_FILE, 'r') as f:
         pump_history = json.loads(f.read())

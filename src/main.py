@@ -16,18 +16,27 @@ PROFILE_FILE = PATH_RESSOURCES + "/profile.json"
 
 app = Flask(__name__, template_folder=PATH + "/web/templates", static_folder=PATH + "/web/static")
 
+'''
+Route pour recevoir les données de glycémie et calculer la dose d'insuline à injecter
+'''
 @app.route('/control', methods=['POST'])
 def control_loop():
     data = request.json
     response = dt.process(data['glycemie'])
     return jsonify({"insuline": response })
 
+ '''
+ Historique bidon basé sur une valeur de Matlab
+ '''
 @app.route('/historique', methods=['POST'])
 def historique_loop():
     data = request.json
     createHistorique(data.get("size", 8640), data.get("basal", 120))
     return jsonify({"response": "Done" })
 
+'''
+Route pour afficher la page web avec les données de profil
+'''
 @app.route('/')
 def web():
     with open(PROFILE_FILE) as f:
@@ -36,6 +45,9 @@ def web():
 
     return render_template("index.html", profile=data)
 
+'''
+Route pour mettre à jour le profil de la pompe
+'''
 @app.route('/updateprofile', methods=['POST'])
 def update_profile():
     data = request.json
@@ -44,12 +56,18 @@ def update_profile():
         json.dump(data, f)
         f.close()
 
+'''
+Route pour recevoir un historique de glycémie depuis Matlab et le stocker
+'''
 @app.route('/historiqueMatlab', methods=['POST'])
 def historique_matlab():
     data = request.json
     createHistoriqueMatlab(data["values"])
     return jsonify({"response": "Done" })
  
+'''
+Historique bidon basé sur une valeur de Matlab
+'''
 def createHistorique(size=8640, basal=120):
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
@@ -75,6 +93,9 @@ def createHistorique(size=8640, basal=120):
     with open(GLUCOSE_FILE, "w") as f:
         json.dump(datas, f)
 
+'''
+Historique basé sur des valeurs envoyées par Matlab
+'''
 def createHistoriqueMatlab(values):
     date = datetime.datetime.now(datetime.timezone.utc)
     datas = []
@@ -102,6 +123,10 @@ def createHistoriqueMatlab(values):
 
     return jsonify({"response": "Profile updated" })
 
+'''
+Faux historique de la pompe pour tester la partie calcul de l'insuline
+Probablement à modifier pour être plus réaliste
+'''
 def pump_history(date):
     pump_history_data = []
     event_rate =  {
@@ -109,6 +134,7 @@ def pump_history(date):
         "carbs": 40
     }
     pump_history_data.append(event_rate)
+
     with open(PUMP_HISTORY_FILE, "w") as f:
         json.dump(pump_history_data, f, indent=4)
 
