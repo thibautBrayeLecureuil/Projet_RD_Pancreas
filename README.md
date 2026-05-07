@@ -41,5 +41,5 @@ Pour lancer l'interface vous pouver exécuter la commande d'installation. Le scr
 
 Vous pouvez aussi executer le fichier main.y avec la commande ```python3 [PATH]/main.py```
 
-> [IMPORTANT]
+> [!IMPORTANT]
 > remplacez "PATH" par votre chemin d'accès.
