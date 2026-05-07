@@ -1,4 +1,4 @@
-# Projet_RD_Pancreas
+# PAOA (Pancréas artificiel openAPS)
 
 ## Présentation
 Ce projet à pour but de mettre en place une interface entre le simulateur de patient T1DMS et l'algorithme Oref0.
