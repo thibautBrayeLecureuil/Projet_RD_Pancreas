@@ -35,3 +35,6 @@ Le dossier "web" contient le code html permettant d'afficher les données des fi
 
 Dans l'état actuel des choses ce dernier ne contient que la page de configuration du profile patient.
 
+## Lancement de l'interface
+
+Pour lancer l'interface vous pouver exécuter la commande d'installation. Le script init.sh prend en charge la supression de l'ancien repertoire.
