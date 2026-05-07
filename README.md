@@ -16,7 +16,7 @@ En executant la commande suivante, le projet va être téléchargé puis dézipp
 L'installation de la bibliothèque python Flask est faite par le script init.sh. Néanmoins, il est possible que d'autres bibliothèques utilisées par le projet ne soient pas installées sur votre poste. Vous devrez, dans le cas échéant, les installer manuellement.
 
 > [!IMPORTANT]
-> Si le port est déjà utilisé, l'interface ne pourra pas se lancer. Pour corriger cela, il vous faudra modifier la variable "PORT" dans le fichier "/src/main.py"
+> Si le port est déjà utilisé, l'interface ne pourra pas se lancer. Pour corriger cela, il vous faudra modifier la variable "port" dans le fichier "config.json"
 
 ## Architecture
 
@@ -39,7 +39,13 @@ Dans l'état actuel des choses ce dernier ne contient que la page de configurati
 
 Pour lancer l'interface vous pouver exécuter la commande d'installation. Le script init.sh prend en charge la supression de l'ancien répertoire.
 
-Vous pouvez aussi executer le fichier main.y avec la commande ```python3 [PATH]/main.py```
+Vous pouvez aussi executer le fichier main.py avec la commande ```python3 [PATH]/main.py```
 
 > [!IMPORTANT]
-> remplacez "PATH" par votre chemin d'accès.
+> Remplacez "PATH" par votre chemin d'accès.
+
+## Configuration
+
+Le fichier "config.json" contient la configuration du projet.
+
+Vous y trouverez le port ainsi que la valeur de décalage temporel à chaque appel de l'interface.
