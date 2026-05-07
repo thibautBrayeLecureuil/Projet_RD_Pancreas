@@ -5,6 +5,8 @@ import json
 import os
 import random
 
+PORT=8081
+
 PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
 PATH_RESSOURCES = PATH + "/ressources"
 GLUCOSE_FILE = PATH_RESSOURCES + "/glucose.json"
@@ -111,4 +113,4 @@ def pump_history(date):
         json.dump(pump_history_data, f, indent=4)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081)
+    app.run(host='0.0.0.0', port=PORT)
