@@ -25,7 +25,7 @@ def control_loop():
     response = dt.process(data['glycemie'])
     return jsonify({"insuline": response })
 
- '''
+'''
  Historique bidon basé sur une valeur de Matlab
  '''
 @app.route('/historique', methods=['POST'])
