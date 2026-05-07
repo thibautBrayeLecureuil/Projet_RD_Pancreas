@@ -37,4 +37,9 @@ Dans l'état actuel des choses ce dernier ne contient que la page de configurati
 
 ## Lancement de l'interface
 
-Pour lancer l'interface vous pouver exécuter la commande d'installation. Le script init.sh prend en charge la supression de l'ancien repertoire.
+Pour lancer l'interface vous pouver exécuter la commande d'installation. Le script init.sh prend en charge la supression de l'ancien répertoire.
+
+Vous pouvez aussi executer le fichier main.y avec la commande ```python3 [PATH]/main.py```
+
+> [IMPORTANT]
+> remplacez "PATH" par votre chemin d'accès.
