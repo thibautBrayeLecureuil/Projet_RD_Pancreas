@@ -24,7 +24,7 @@ L'installation de la bibliothèque python Flask est faite par le script init.sh.
 Dans le dossier "ressources", vous trouverez tous les fichiers nécessaires à la configuration et au bon fonctionnement d'Oref0.
 
 ### SRC
-Vous trouverez dans "src" le code de l'interface. 
+Vous trouverez dans le dossier "src" le code de l'interface. 
 
 Le fichier "main.py" contient les différentes routes de l'API et fait apppel à dataTreatment.
 
