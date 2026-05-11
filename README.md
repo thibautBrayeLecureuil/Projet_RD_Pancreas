@@ -23,15 +23,17 @@ L'installation de la bibliothèque python Flask est faite par le script init.sh.
 ### Ressources
 Dans le dossier "ressources", vous trouverez tous les fichiers nécessaires à la configuration et au bon fonctionnement d'Oref0.
 
+Les fichiers "pumphistory.json" et "glucose.json" n'ont pas besoin d'être modifier. En effet, leur contenu est réécrit à chaque lancement de simulation et lors de la simulation.
+
 ### SRC
 Vous trouverez dans le dossier "src" le code de l'interface. 
 
-Le fichier "main.py" contient les différentes routes de l'API et fait apppel à dataTreatment.
+Le fichier "main.py" contient les différentes routes de l'API qui font appel à dataTreatment.
 
 Le fichier "dataTreatment.py" permet de traiter et mettre en forme les données. C'est aussi dans ce dernier que l'appel à l'algorithme Ore0 est fait.
 
 ### Web
-Le dossier "web" contient le code html permettant d'afficher les données des fichiers JSON.
+Le dossier "web" contient les templates en html permettant d'afficher les données des fichiers JSON.
 
 Dans l'état actuel des choses ce dernier ne contient que la page de configuration du profile patient.
 
